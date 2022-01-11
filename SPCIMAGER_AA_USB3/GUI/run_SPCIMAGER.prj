@@ -1,0 +1,78 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="140718586" file="C:\SPAD\SPCIMAGER_AA_USB3\SPCIMAGER_AA_USB3\GUI\run_SPCIMAGER.prj" location="C:\SPAD\SPCIMAGER_AA_USB3\SPCIMAGER_AA_USB3\GUI" name="run_SPCIMAGER" target="target.mlapps" target-name="Package App">
+    <param.appname>run_SPCIMAGER</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.products.name>
+      <item>Communications System Toolbox</item>
+      <item>MATLAB</item>
+    </param.products.name>
+    <param.products.id>
+      <item>'36'</item>
+      <item>1</item>
+    </param.products.id>
+    <param.products.version>
+      <item>6.0</item>
+      <item>9.7</item>
+    </param.products.version>
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>99c6705f-5565-476e-bbca-66c67f5d064b</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>C:\Users\igyongy2\Desktop\CSS\Devices\SPCIMAGER_AA_USB3\temp\run_SPCIMAGER.m</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>C:\Users\igyongy2\Desktop\CSS\Devices\SPCIMAGER_AA_USB3\Opal Kelly\Custom\trigger.m</file>
+      <file>C:\Users\igyongy2\Desktop\CSS\Devices\SPCIMAGER_AA_USB3\Opal Kelly\okusbfrontpanel\activatetriggerin.m</file>
+      <file>C:\Users\igyongy2\Desktop\CSS\Devices\SPCIMAGER_AA_USB3\Opal Kelly\okusbfrontpanel\readfromblockpipeout.m</file>
+    </fileset.depfun>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\DigitalDemo_fast.fig</file>
+      <file>${PROJECT_ROOT}\DigitalDemo_fast.m</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\SPAD\SPCIMAGER_AA_USB3\SPCIMAGER_AA_USB3" name="GUI" optional="false">C:\SPAD\SPCIMAGER_AA_USB3\SPCIMAGER_AA_USB3\GUI</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2019b</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

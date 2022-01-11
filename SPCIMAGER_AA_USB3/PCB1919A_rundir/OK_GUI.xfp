@@ -1,0 +1,1296 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+CSS Platform GUI
+-->
+<resource version="2.3.0.1">
+<object class="okPanel" name="panel1">
+	<title>CSS Platform GUI</title>
+	<size>600,2255</size>
+		<object class="okStaticBox">
+			<position>10,20</position>
+			<size>95,195</size>
+			<label>OK LEDs</label>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 0</label>
+			<position>15,35</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>0</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 1</label>
+			<position>15,57</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>1</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 2</label>
+			<position>15,79</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>2</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 3</label>
+			<position>15,101</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>3</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 4</label>
+			<position>15,123</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>4</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 5</label>
+			<position>15,145</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>5</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 6</label>
+			<position>15,167</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>6</bit>
+		</object>
+		<object class="okToggleButton">
+			<label>LED 7</label>
+			<position>15,189</position>
+			<size>60,20</size>
+			<endpoint>0x00</endpoint>
+			<bit>7</bit>
+		</object>
+			<object class="okStaticBox">
+				<position>140,35</position>
+					<size>155,45</size>
+					<label>DAC VHV</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,50</position>
+					<size>60,25</size>
+					<tooltip>DAC VHV</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>2500</maxvalue>
+					<endpoint>0x01</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,45</position>
+						<size>100,15</size>
+						<label>HV: Value x 7.4mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,85</position>
+					<size>155,45</size>
+					<label>DAC VHV2</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,100</position>
+					<size>60,25</size>
+					<tooltip>DAC VHV2</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>2500</maxvalue>
+					<endpoint>0x02</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,95</position>
+						<size>100,15</size>
+						<label>HV: Value x 7.4mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,135</position>
+					<size>155,45</size>
+					<label>DAC VS</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,150</position>
+					<size>60,25</size>
+					<tooltip>DAC VS</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x03</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,145</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,185</position>
+					<size>155,45</size>
+					<label>DAC VG</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,200</position>
+					<size>60,25</size>
+					<tooltip>DAC VG</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3650</maxvalue>
+					<endpoint>0x04</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,195</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,235</position>
+					<size>155,45</size>
+					<label>DAC VQ</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,250</position>
+					<size>60,25</size>
+					<tooltip>DAC VQ</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x05</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,245</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,285</position>
+					<size>155,45</size>
+					<label>DAC VREF</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,300</position>
+					<size>60,25</size>
+					<tooltip>DAC VREF</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x06</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,295</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,335</position>
+					<size>155,45</size>
+					<label>DAC V3V3</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,350</position>
+					<size>60,25</size>
+					<tooltip>DAC V3V3</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3650</maxvalue>
+					<endpoint>0x07</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,345</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,385</position>
+					<size>155,45</size>
+					<label>DAC V2V7</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,400</position>
+					<size>60,25</size>
+					<tooltip>DAC V2V7</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3650</maxvalue>
+					<endpoint>0x08</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,395</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,435</position>
+					<size>155,45</size>
+					<label>DAC IBIAS1</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,450</position>
+					<size>60,25</size>
+					<tooltip>DAC IBIAS1</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x09</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,445</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,485</position>
+					<size>155,45</size>
+					<label>DAC IBIAS2</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,500</position>
+					<size>60,25</size>
+					<tooltip>DAC IBIAS2</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x0a</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,495</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,535</position>
+					<size>155,45</size>
+					<label>DAC V3V6</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,550</position>
+					<size>60,25</size>
+					<tooltip>DAC V3V6</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3650</maxvalue>
+					<endpoint>0x0b</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,545</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,585</position>
+					<size>155,45</size>
+					<label>DAC VDDOPAMP</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,600</position>
+					<size>60,25</size>
+					<tooltip>DAC VDDOPAMP</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3650</maxvalue>
+					<endpoint>0x0c</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,595</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,635</position>
+					<size>155,45</size>
+					<label>DAC VDDE</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,650</position>
+					<size>60,25</size>
+					<tooltip>DAC VDDE</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x0d</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,645</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,685</position>
+					<size>155,45</size>
+					<label>DAC V5_SET</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,700</position>
+					<size>60,25</size>
+					<tooltip>DAC V5_SET</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x0e</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,695</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,735</position>
+					<size>155,45</size>
+					<label>DAC ADCPWR</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,750</position>
+					<size>60,25</size>
+					<tooltip>DAC ADCPWR</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x0f</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,745</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,785</position>
+					<size>155,45</size>
+					<label>DAC V1V2</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,800</position>
+					<size>60,25</size>
+					<tooltip>DAC V1V2</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1250</maxvalue>
+					<endpoint>0x10</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,795</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,835</position>
+					<size>155,45</size>
+					<label>DAC DAC5</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,850</position>
+					<size>60,25</size>
+					<tooltip>DAC DAC5</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x11</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,845</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+			<object class="okStaticBox">
+				<position>140,885</position>
+					<size>155,45</size>
+					<label>DAC DAC6</label>
+				</object>
+				<object class="okDigitEntry">
+					<position>155,900</position>
+					<size>60,25</size>
+					<tooltip>DAC DAC6</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>3300</maxvalue>
+					<endpoint>0x12</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+				</object>
+				<object class="okStaticText">
+						<position>305,895</position>
+						<size>100,15</size>
+						<label>LV: Value x 1.0mV</label>
+				</object>
+		<object class="okTriggerButton">
+			<label>Programme DAC --></label>
+			<position>160,935</position>
+			<size>120,20</size>
+			<endpoint>0x40</endpoint>
+			<bit>0</bit>
+		</object>
+		<object class="okTriggerButton">
+			<label>Reset DAC</label>
+			<position>160,955</position>
+			<size>120,20</size>
+			<endpoint>0x40</endpoint>
+			<bit>1</bit>
+		</object>
+	<object class="okLED">
+			<position>10,360</position>
+			<size>100,25</size>
+			<label align="right">ADCs Powered Up</label>
+			<style>SQUARE</style>
+			<color>#ff0000</color>
+			<endpoint>0x20</endpoint>
+			<bit>4</bit>
+</object>
+	<object class="okDigitEntry">
+					<position>85,415</position>
+					<size>25,25</size>
+					<tooltip>Mode</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x00</endpoint>
+					<bit>8</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>15,415</position>
+		<size>70,15</size>
+		<label>Mode :</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>85,445</position>
+		<size>25,25</size>
+		<tooltip>FSMState</tooltip>
+		<radix>10</radix>
+		<endpoint>0x20</endpoint>
+		<maxvalue>255</maxvalue>
+		<bit>5</bit>
+	</object>
+	<object class="okStaticText">
+		<position>15,445</position>
+		<size>70,15</size>
+		<label>FSMState :</label>
+</object>
+	<object class="okStaticText">
+		<position>445,15</position>
+		<size>100,15</size>
+		<label>CPGA68</label>
+</object>
+	<object class="okStaticText">
+		<position>445,15</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_DELAYGEN_POS1:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,30</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_DELAYGEN_POS1</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>127</maxvalue>
+					<endpoint>0x13</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,60</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_DELAYGEN_POS2:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,75</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_DELAYGEN_POS2</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>127</maxvalue>
+					<endpoint>0x13</endpoint>
+					<bit>7</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,105</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_DELAYGEN_DAC:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,120</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_DELAYGEN_DAC</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>15</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,150</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_DELAYGEN_LT_SEL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,165</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_DELAYGEN_LT_SEL</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x13</endpoint>
+					<bit>14</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,195</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_DELAYGEN_OFFSET_SEL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,210</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_DELAYGEN_OFFSET_SEL</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x13</endpoint>
+					<bit>15</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,240</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_DELAYGEN_POS1:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,255</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_DELAYGEN_POS1</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>127</maxvalue>
+					<endpoint>0x15</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,285</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_DELAYGEN_POS2:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,300</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_DELAYGEN_POS2</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>127</maxvalue>
+					<endpoint>0x15</endpoint>
+					<bit>7</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,330</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_DELAYGEN_DAC:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,345</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_DELAYGEN_DAC</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>15</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>4</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,375</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_DELAYGEN_LT_SEL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,390</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_DELAYGEN_LT_SEL</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x15</endpoint>
+					<bit>14</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,420</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_DELAYGEN_OFFSET_SEL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,435</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_DELAYGEN_OFFSET_SEL</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x15</endpoint>
+					<bit>15</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,465</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_OUT_ENABLE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,480</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_OUT_ENABLE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>8</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,510</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_OUT_ENABLE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,525</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_OUT_ENABLE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>9</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,555</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINA_INPUTSEL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,570</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINA_INPUTSEL</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>10</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,600</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_SPI_BINB_INPUTSEL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,615</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_SPI_BINB_INPUTSEL</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>11</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,645</position>
+		<size>70,15</size>
+		<label>ROI_FIRST_ROW:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,660</position>
+					<size>100,25</size>
+					<tooltip>ROI_FIRST_ROW</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x16</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,690</position>
+		<size>70,15</size>
+		<label>ROI_LAST_ROW:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,705</position>
+					<size>100,25</size>
+					<tooltip>ROI_LAST_ROW</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x16</endpoint>
+					<bit>8</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,735</position>
+		<size>70,15</size>
+		<label>ROI_FIRST_COL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,750</position>
+					<size>100,25</size>
+					<tooltip>ROI_FIRST_COL</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>319</maxvalue>
+					<endpoint>0x17</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,780</position>
+		<size>70,15</size>
+		<label>ROI_LAST_COL:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,795</position>
+					<size>100,25</size>
+					<tooltip>ROI_LAST_COL</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>319</maxvalue>
+					<endpoint>0x18</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,825</position>
+		<size>70,15</size>
+		<label>EXPOSURE_START_TRIGGER:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,840</position>
+					<size>100,25</size>
+					<tooltip>EXPOSURE_START_TRIGGER</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x44</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,870</position>
+		<size>70,15</size>
+		<label>RST_CTRL_SR:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,885</position>
+					<size>100,25</size>
+					<tooltip>RST_CTRL_SR</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x41</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,915</position>
+		<size>70,15</size>
+		<label>PROG_CTRL_SR:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,930</position>
+					<size>100,25</size>
+					<tooltip>PROG_CTRL_SR</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x42</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,960</position>
+		<size>70,15</size>
+		<label>PROG_COMPLETE:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,975</position>
+		<size>100,25</size>
+		<tooltip>PROG_COMPLETE</tooltip>
+					<radix>2</radix>
+		<endpoint>0x60</endpoint>
+		<maxvalue>1</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1005</position>
+		<size>70,15</size>
+		<label>ADC_FIFO_OUT:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,1020</position>
+		<size>100,25</size>
+		<tooltip>ADC_FIFO_OUT</tooltip>
+					<radix>10</radix>
+		<endpoint>0xA2</endpoint>
+		<maxvalue>65535</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1050</position>
+		<size>70,15</size>
+		<label>ADC_FIFO_RST:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1065</position>
+					<size>100,25</size>
+					<tooltip>ADC_FIFO_RST</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x43</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1095</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_CHIP_RESET:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1110</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_CHIP_RESET</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>12</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1140</position>
+		<size>70,15</size>
+		<label>EXPOSURE_TIME_LSB:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1155</position>
+					<size>100,25</size>
+					<tooltip>EXPOSURE_TIME_LSB</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>65535</maxvalue>
+					<endpoint>0x1A</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1185</position>
+		<size>70,15</size>
+		<label>EXPOSURE_TIME_MSB:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1200</position>
+					<size>100,25</size>
+					<tooltip>EXPOSURE_TIME_MSB</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>65535</maxvalue>
+					<endpoint>0x1B</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1230</position>
+		<size>70,15</size>
+		<label>EXPOSURE_MODE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1245</position>
+					<size>100,25</size>
+					<tooltip>EXPOSURE_MODE</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>65535</maxvalue>
+					<endpoint>0x17</endpoint>
+					<bit>10</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1275</position>
+		<size>70,15</size>
+		<label>EXPOSURE_TIME_LSB_RET:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,1290</position>
+		<size>100,25</size>
+		<tooltip>EXPOSURE_TIME_LSB_RET</tooltip>
+					<radix>10</radix>
+		<endpoint>0x24</endpoint>
+		<maxvalue>65535</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1320</position>
+		<size>70,15</size>
+		<label>EXPOSURE_TIME_MSB_RET:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,1335</position>
+		<size>100,25</size>
+		<tooltip>EXPOSURE_TIME_MSB_RET</tooltip>
+					<radix>10</radix>
+		<endpoint>0x25</endpoint>
+		<maxvalue>65535</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1365</position>
+		<size>70,15</size>
+		<label>FIFO_WR_COUNT:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,1380</position>
+		<size>100,25</size>
+		<tooltip>FIFO_WR_COUNT</tooltip>
+					<radix>10</radix>
+		<endpoint>0x22</endpoint>
+		<maxvalue>65535</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1410</position>
+		<size>70,15</size>
+		<label>FIFO_WR_LIMIT:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,1425</position>
+		<size>100,25</size>
+		<tooltip>FIFO_WR_LIMIT</tooltip>
+					<radix>10</radix>
+		<endpoint>0x23</endpoint>
+		<maxvalue>65535</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1455</position>
+		<size>70,15</size>
+		<label>DEBUG_PULSERESET:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1470</position>
+					<size>100,25</size>
+					<tooltip>DEBUG_PULSERESET</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x45</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1500</position>
+		<size>70,15</size>
+		<label>CDSBLK_DISABLE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1515</position>
+					<size>100,25</size>
+					<tooltip>CDSBLK_DISABLE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>13</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1545</position>
+		<size>70,15</size>
+		<label>CDSSIG_DISABLE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1560</position>
+					<size>100,25</size>
+					<tooltip>CDSSIG_DISABLE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>14</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1590</position>
+		<size>70,15</size>
+		<label>CDS_CROWBAR_DISABLE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1605</position>
+					<size>100,25</size>
+					<tooltip>CDS_CROWBAR_DISABLE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x14</endpoint>
+					<bit>15</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1635</position>
+		<size>70,15</size>
+		<label>NO_OF_EXPOSURES:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1650</position>
+					<size>100,25</size>
+					<tooltip>NO_OF_EXPOSURES</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>4294967295</maxvalue>
+					<endpoint>0x19</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1680</position>
+		<size>70,15</size>
+		<label>DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1695</position>
+					<size>100,25</size>
+					<tooltip>DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x18</endpoint>
+					<bit>11</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1725</position>
+		<size>70,15</size>
+		<label>FIRMWARE_REVISION:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,1740</position>
+		<size>100,25</size>
+		<tooltip>FIRMWARE_REVISION</tooltip>
+					<radix>10</radix>
+		<endpoint>0x3f</endpoint>
+		<maxvalue>65535</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,1770</position>
+		<size>70,15</size>
+		<label>DIGITAL_READOUT_PIXEL_BIT:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1785</position>
+					<size>100,25</size>
+					<tooltip>DIGITAL_READOUT_PIXEL_BIT</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x18</endpoint>
+					<bit>10</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1815</position>
+		<size>70,15</size>
+		<label>ROLLING_RESET_CYCLES:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1830</position>
+					<size>100,25</size>
+					<tooltip>ROLLING_RESET_CYCLES</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x1c</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1860</position>
+		<size>70,15</size>
+		<label>GLOBAL_RESET_CYCLES:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1875</position>
+					<size>100,25</size>
+					<tooltip>GLOBAL_RESET_CYCLES</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>65535</maxvalue>
+					<endpoint>0x1d</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1905</position>
+		<size>70,15</size>
+		<label>COLUMN_CYCLES_CROWBAR:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1920</position>
+					<size>100,25</size>
+					<tooltip>COLUMN_CYCLES_CROWBAR</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x1e</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1950</position>
+		<size>70,15</size>
+		<label>ADC_SIGNALS_START:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,1965</position>
+					<size>100,25</size>
+					<tooltip>ADC_SIGNALS_START</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x1e</endpoint>
+					<bit>8</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,1995</position>
+		<size>70,15</size>
+		<label>ADC_CROWBAR_SAMPLE_START:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,2010</position>
+					<size>100,25</size>
+					<tooltip>ADC_CROWBAR_SAMPLE_START</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x1f</endpoint>
+					<bit>0</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,2040</position>
+		<size>70,15</size>
+		<label>CDS_BLK_AND_SIG_CYCLES:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,2055</position>
+					<size>100,25</size>
+					<tooltip>CDS_BLK_AND_SIG_CYCLES</tooltip>
+					<radix>10</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>255</maxvalue>
+					<endpoint>0x1f</endpoint>
+					<bit>8</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,2085</position>
+		<size>70,15</size>
+		<label>SPCIMAGER_AA_TRUE_FALSE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,2100</position>
+					<size>100,25</size>
+					<tooltip>SPCIMAGER_AA_TRUE_FALSE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x01</endpoint>
+					<bit>15</bit>
+					<value>0</value>
+</object>
+	<object class="okStaticText">
+		<position>445,2130</position>
+		<size>70,15</size>
+		<label>SINGLE_BIT_FIFO_OUT:</label>
+</object>
+	<object class="okDigitDisplay">
+		<position>445,2145</position>
+		<size>100,25</size>
+		<tooltip>SINGLE_BIT_FIFO_OUT</tooltip>
+					<radix>10</radix>
+		<endpoint>0xA3</endpoint>
+		<maxvalue>4294967295</maxvalue>
+		<bit>0</bit>
+	</object>
+	<object class="okStaticText">
+		<position>445,2175</position>
+		<size>70,15</size>
+		<label>DIGITAL_TOF_AMBIENT_REJECTION_ENABLE:</label>
+</object>
+	<object class="okDigitEntry">
+					<position>445,2190</position>
+					<size>100,25</size>
+					<tooltip>DIGITAL_TOF_AMBIENT_REJECTION_ENABLE</tooltip>
+					<radix>2</radix>
+					<minvalue>0</minvalue>
+					<maxvalue>1</maxvalue>
+					<endpoint>0x01</endpoint>
+					<bit>14</bit>
+					<value>0</value>
+</object>
+<object class="okStaticBox">
+		<position>5,5</position>
+		<size>110,241</size>
+		<label>OK Board I/O</label>
+</object>
+<object class="okStaticBox">
+		<position>130,5</position>
+		<size>300,995</size>
+		<label>DAC Control</label>
+</object>
+<object class="okStaticBox">
+		<position>10,305</position>
+		<size>110,80</size>
+		<label>ADC Control</label>
+		<label>ADC Control</label>
+</object>
+<object class="okStaticBox">
+		<position>10,395</position>
+		<size>110,80</size>
+		<label>FSM Control</label>
+</object>
+</object>
+</resource>
