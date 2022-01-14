@@ -1,5 +1,4 @@
 function varargout = DigitalDemo_fast(varargin)
-%TIAN TIAN continuous
 % DigitalDemo_fast MATLAB code for DigitalDemo_fast.fig
 %      DigitalDemo_fast, by itself, creates a new DigitalDemo_fast or raises the existing
 %      singleton*.
@@ -74,7 +73,7 @@ function varargout = DigitalDemo_fast_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in pushbutton1.
+%% --- Executes on button press in pushbutton1-->Start Live mode.
 function pushbutton1_Callback(hObject, eventdata, handles)
 % % hObject    handle to pushbutton1 (see GCBO)
 % % eventdata  reserved - to be defined in a future version of MATLAB
@@ -83,22 +82,21 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % %assignin('base','imageCaptured',imageCaptured);
 % clear imageCaptured;
 %
-% function [imageCaptured] = grabImage(hObject, eventdata, handles) Setup
+% function [imageCaptured] = grabImage(hObject, eventdata, handles)
+% Setup
 
 axes(handles.axes1);
 h = text(0,-3,'Live Mode...','fontsize',10);
 drawnow;
 pause on
-% framm=uint32(zeros(240,320));
 while 1,
     
     g_back=evalin('base','g_back');
-   % evalin('base','wireindata(s.okComms,s.bank,''DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE'',0)'); %forced gs
-%     
-    gexp=evalin('base','gexp');
-    evalin('base','wireindata(s.okComms,s.bank,''DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE'',1-gexp)');
-    exptime=evalin('base','exptime');
-    ttime=exptime + 0.32*(1-gexp);
+    evalin('base','wireindata(s.okComms,s.bank,''DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE'',0)'); %forced gs
+    
+    gexp=1;
+    exptime=evalin('base','exptime'); %exposure time
+    ttime=exptime + 0.32*(1-gexp);%What is ttime-YIFANG
     concat = ['s.SetExposureTime(' num2str(ttime) ');'];
     evalin('base',concat);
     if g_back == 1,
@@ -114,7 +112,7 @@ while 1,
         % concat = ['s.SetRegionOfInterest(' num2str(y1) ',' num2str(y2) ',0,319)'];
         concat = ['s.SetRegionOfInterest(1,240,0,319)'];
         evalin('base',concat);
-        evalin('base','trigger(s.okComms, s.bank, ''ADC_FIFO_RST'')');
+        evalin('base','trigger(s.okComms, s.bank, ''ADC_FIFO_RST'')');%pin in OKVerilog.v
         evalin('base','trigger(s.okComms, s.bank, ''EXPOSURE_START_TRIGGER'')');
         
         % tempdata = readfromblockpipeout(evalin('base','s.okComms'),162,32,yrange*320*4);
@@ -146,11 +144,11 @@ while 1,
         concat = ['s.SetRegionOfInterest(1,240,0,319)'];
         evalin('base',concat);
                 
-         evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',1)');       
-         pause(2e-4*n);
-         evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',0)');      
-         evalin('base','trigger(s.okComms, s.bank, ''PROG_CTRL_SR'')');
-%        pause(1);
+%         evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',1)');       
+%         pause(2e-4*n);
+%         evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',0)');      
+        evalin('base','trigger(s.okComms, s.bank, ''PROG_CTRL_SR'')');
+       % pause(1);
         evalin('base','trigger(s.okComms, s.bank, ''ADC_FIFO_RST'')');
         evalin('base','trigger(s.okComms, s.bank, ''EXPOSURE_START_TRIGGER'')');
         
@@ -163,7 +161,7 @@ while 1,
         end
         sum_frame=pipevalue_adj;
         
-      colormap('default');
+        colormap('gray');
         
         b_saved=evalin('base','b_saved');
         
@@ -179,14 +177,7 @@ while 1,
         %std(imagestream)
         
         %low = 0;
-        if n>1,
-        bfrm=evalin('base','bfrm');
-  %      assignin('base', 'imageCaptured', imageCaptured);
-        imageCaptured=double(imageCaptured);
-        imageCaptured(bfrm>6000)=NaN;
-        imageCaptured=uint16(inpaint_nans(imageCaptured,4));
-        end
-%         
+        
         colormap('gray');
         
         %contrast = [low high];
@@ -197,21 +188,15 @@ while 1,
             assignin('base', 'stop', 0);
             break;
         end;
-%         framm=framm+uint32(imageCaptured);
-%         imagesc(framm);
         
-        %imagesc(1,y1+2*0,fliplr(fliplr(imageCaptured(y1+2*0:y2,:))),[0 n/bright]);
+        imagesc(1,y1,imageCaptured(y1:y2,:),[0 n/bright]);
         % %     x=['Total DC: ' num2str(sum(imageCaptured(:)))];
         % %     %x = sprintf(' %2d',name);
         % %     text(0,-3,x,'fontsize',10);
         %     %imagesc(1,1,imageCaptured)
-        temp=sort(imageCaptured(:));
-        
-        imagesc(1,1,imgaussfilt(rot90(fliplr(min((imageCaptured(2:end-1,:)),0*temp(69000)+n/bright))),1));
-        axis([0 238 0 320]);
+        axis([0 320 0 240]);
         %h = text(0,-3,['Live Mode...'],'fontsize',10);
-            h = text(0,-3,['Live Mode...', num2str(log10(1024*-log(1-median(single(imageCaptured(:)))/1024)))],'fontsize',10);%median
-            %h = text(0,-3,'Live Mode...','fontsize',10);
+            h = text(0,-3,['Live Mode...', num2str(median(imageCaptured(:)))],'fontsize',10);%median
         drawnow;
         
         axes(handles.axes3);
@@ -221,7 +206,6 @@ while 1,
         drawnow;
         axes(handles.axes1);
         
-        
         %    dnoise=median(imageCaptured(:));
         % %   dnoise=mean(imageCaptured(:)/(n*0.1e-6));
         % %    median(imageCaptured(:));
@@ -229,15 +213,53 @@ while 1,
         %     evalin('base',concat);
         % %    assignin('base', 'noise', imageCaptured(:));
         % % %    toc
-% %         assignin('base', 'tempframe', framm);
-        %evalin('base','framm=tempframe+framm');
     end;
 end;
 delete(h)
 clear imageCaptured;
 
 
-% --- Executes on button press in setup_button.
+%% --- Executes on button press in pushbutton11.--STOP liveview
+function pushbutton11_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+assignin('base', 'stop', 1);
+
+%% --- Executes on button press in pushbutton12.-->capture background
+function pushbutton12_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+assignin('base', 'g_back', 1);
+
+%% Aggregation--n
+function df=popupmenu1_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu1
+contents = cellstr(get(hObject,'String'));
+df = contents{get(hObject,'Value')};
+assignin('base', 'n', str2double(df));
+% concat = ['s.SetExposures(' df ',1)'];
+% evalin('base',concat);
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+%% --- Executes on button press in setup_button-->"Sensor On"
 function df=setup_button_Callback(hObject, eventdata, handles)
 % hObject    handle to setup_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -298,8 +320,6 @@ assignin('base', 'file_name', 'spc_data');
 assignin('base','blocks',1);
 assignin('base', 'bitplanes',10000);
 assignin('base', 'stop', 0);
-%evalin('base','load(''bfrm'')');
-evalin('base','load(''C:\SPAD\SPCIMAGER_AA_USB3\SPCIMAGER_AA_USB3\Opal Kelly\bfrm'')');
 %    timeout(evalin('base','s.okComms'),10);
 
 evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',1)');
@@ -309,33 +329,40 @@ evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',0)');
 evalin('base','trigger(s.okComms, s.bank, ''PROG_CTRL_SR'')');
 %evalin('base','trigger(s.okComms, s.bank, ''PROG_CTRL_SR'')');
 
-function df=popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+%% --- Executes on button press in pushbutton3.-->sensor OFF
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+evalin('base','SensorStop');
+delete(handles.figure1)
+
+
+
+%% exposure
+function edit5_Callback(hObject, eventdata, handles)
+% hObject    handle to edit5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
-contents = cellstr(get(hObject,'String'));
-df = contents{get(hObject,'Value')};
-assignin('base', 'n', str2double(df));
-% concat = ['s.SetExposures(' df ',1)'];
-% evalin('base',concat);
+% Hints: get(hObject,'String') returns contents of edit5 as text
+%        str2double(get(hObject,'String')) returns contents of edit5 as a double
+df = str2double(get(hObject,'String'));
+assignin('base', 'exptime', df);
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+function edit5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on selection change in popupmenu5.
+%% --- Executes on selection change in popupmenu5-->sensitivity
 function popupmenu5_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -354,7 +381,6 @@ switch df
         evalin('base','s.SetVoltage(''VHV'',16);');
 end
 
-
 % --- Executes during object creation, after setting all properties.
 function popupmenu5_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to popupmenu5 (see GCBO)
@@ -367,14 +393,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-evalin('base','SensorStop');
-delete(handles.figure1)
 
+%% first line
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -397,6 +417,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+%% last line
 function edit2_Callback(hObject, eventdata, handles)
 % hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -419,6 +440,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+%% File name
 function edit3_Callback(hObject, eventdata, handles)
 % hObject    handle to edit3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -442,7 +464,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in popupmenu7.
+%% --- Executes on selection change in popupmenu7-->number of blocks 'blocks'
 function popupmenu7_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -466,7 +488,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on selection change in popupmenu8.
+%% --- Executes on selection change in popupmenu8.-->bit planes per block 'bitplanes'
 function popupmenu8_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -491,7 +513,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton5.
+%% --- Executes on button press in pushbutton5."Capture&Save data START."
 function pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -516,7 +538,9 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
 format shortg
 c = clock;
-dirname=[num2str(c(1)),'_',num2str(c(2)),'_',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',num2str(floor(c(6)))];
+%Yifang changed the filefolder name
+%dirname=[num2str(c(1)),'_',num2str(c(2)),'_',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',num2str(floor(c(6)))];
+dirname=[num2str(c(1)),'_',num2str(c(2)),'_',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',num2str(c(6))];
 mkdir(dirname)
  
 blocks=evalin('base','blocks');
@@ -535,7 +559,7 @@ evalin('base',concat);
 
 evalin('base','wireindata(s.okComms,s.bank,''DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE'',1-gexp)');
 
-exptime=evalin('base','exptime');
+exptime=evalin('base','exptime'); %exposure time
 ttime=exptime + 0.32*(1-gexp);
 %%%ttime=Erange(v) + 0.32*(1-gexp);
 concat = ['s.SetExposureTime(' num2str(ttime) ')'];
@@ -545,7 +569,7 @@ frames=bitplanes;%1600
 
 trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'ADC_FIFO_RST');
 trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'EXPOSURE_START_TRIGGER');
-
+timestamp=zeros(blocks,8);;%YYF
 for ti=1:blocks,
     tic
     %trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'PROG_CTRL_SR');
@@ -555,6 +579,10 @@ for ti=1:blocks,
     % Grab Image
     %    tempdata = zeros(32+4*yrange*10*(frames+(1-gexp)),1,'uint8');
     %tempdata = evalin('base',['readfromblockpipeout(s.okComms, 163,16, 240*10*',num2str(frames),'*4)']);
+   % write timestampe
+    c=clock; %YYF
+    
+    
     tempdata = readfromblockpipeout(evalin('base','s.okComms'),163,128,yrange*10*(frames+2*(ti==1)*(1-gexp))*4);
     %%%concat= [num2str(an) '_' num2str(v) file_name num2str(ti) '.bin'];
     concat= [dirname '/' file_name num2str(ti) '.bin'];
@@ -562,16 +590,19 @@ for ti=1:blocks,
     fileid = fopen(concat,'w'); %'a'
     fwrite(fileid,[ti;yrange;gexp;tempdata(:)]);
     fclose(fileid);
-    %    averageTime = toc/frames
-    clear tempdata
-    toc
+    toc %YYF
+    averageTime = toc/frames %YYF
+    timestamp(ti,:)=[ti averageTime c];%YYF
+    clear tempdata  
+    %toc
  end;
+ writematrix(timestamp, [dirname '/timestamp.xls']) %YYF
 % % % end;
 % % % keyboard;
 % % % end;
 h = msgbox('Data Capture Complete');
 
-% --- Executes on button press in pushbutton7.
+%% ---  pushbutton9.-->Open and convert datafile
 function pushbutton9_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -621,19 +652,18 @@ end;
 clear tempdata
 h = msgbox('Data Conversion Complete');
 
-% --- Executes on button press in pushbutton9.
+%% --- pushbutton7.-->export to TIFF, select output directory
 function pushbutton7_Callback(hObject, eventdata, handles)
-dname = uigetdir('C:\');
+dname = uigetdir('C:\');%get dir in UI
 assignin('base', 'dname', dname);
 % hObject    handle to pushbutton9 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
-% --- Executes on button press in togglebutton2.
+%% --- Executes on button press in togglebutton2. Enable global shutter
 function togglebutton2_Callback(hObject, eventdata, handles)
 gexp=evalin('base','gexp');
-assignin('base', 'gexp', 1-gexp);
+assignin('base', 'gexp', 1-gexp);% % why gexp=1-gexp?
 
 
 % hObject    handle to togglebutton2 (see GCBO)
@@ -645,7 +675,7 @@ assignin('base', 'gexp', 1-gexp);
 % Hint: get(hObject,'Value') returns toggle state of togglebutton2
 
 
-% --- Executes on selection change in popupmenu9.
+%% --- Executes on selection change in popupmenu9. -->Brightness
 function popupmenu9_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu9 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -655,7 +685,6 @@ df = contents{get(hObject,'Value')};
 assignin('base', 'bright', str2double(df));
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu9 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu9
-
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu9_CreateFcn(hObject, eventdata, handles)
@@ -669,39 +698,3 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in pushbutton11.
-function pushbutton11_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-assignin('base', 'stop', 1);
-
-% --- Executes on button press in pushbutton12.
-function pushbutton12_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-assignin('base', 'g_back', 1);
-
-function edit5_Callback(hObject, eventdata, handles)
-% hObject    handle to edit5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit5 as text
-%        str2double(get(hObject,'String')) returns contents of edit5 as a double
-df = str2double(get(hObject,'String'));
-assignin('base', 'exptime', df);
-
-% --- Executes during object creation, after setting all properties.
-function edit5_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end

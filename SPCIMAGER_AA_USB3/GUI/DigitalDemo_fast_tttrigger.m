@@ -1,29 +1,8 @@
 function varargout = DigitalDemo_fast(varargin)
-%TIAN TIAN continuous
-% DigitalDemo_fast MATLAB code for DigitalDemo_fast.fig
-%      DigitalDemo_fast, by itself, creates a new DigitalDemo_fast or raises the existing
-%      singleton*.
-%
-%      H = DigitalDemo_fast returns the handle to a new DigitalDemo_fast or the handle to
-%      the existing singleton*.
-%
-%      DigitalDemo_fast('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in DigitalDemo_fast.M with the given input arguments.
-%
-%      DigitalDemo_fast('Property','Value',...) creates a new DigitalDemo_fast or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before DigitalDemo_fast_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to DigitalDemo_fast_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
+%TIAN Triggered mode
 % Edit the above text to modify the response to help DigitalDemo_fast
 
-% Last Modified by GUIDE v2.5 09-Sep-2015 15:35:12
+% Last Modified by GUIDE v2.5 02-Nov-2018 10:23:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -253,36 +232,48 @@ else
 end
 evalin('base','SensorStart');
 
-%     assignin('base', 'BinAPos1', 80);
-%     assignin('base', 'BinAPos2', 117);%114/3 %118
-%     assignin('base', 'BinBPos1', 80);
-%     assignin('base', 'BinBPos2', 120);%122
-%     assignin('base', 'BinADAC', 12);%13
-%     assignin('base', 'BinBDAC',12);%13
-%     evalin('base','s.SetPulseGen(BinAPos1, BinAPos2, BinADAC, BinBPos1, BinBPos2, BinBDAC);');
+%      assignin('base', 'BinAPos1', 8);
+%      assignin('base', 'BinAPos2', 23);%114/3 %118
+%      assignin('base', 'BinBPos1', 8);
+%      assignin('base', 'BinBPos2', 20);%122
 % 
-%      evalin('base','s.SetTimeGateInput (''Bin A'', ''PulseGen'');');
-%       evalin('base','s.SetTimeGateInput (''Bin B'', ''PulseGen'');');
-% %      evalin('base','s.SetTimeGateInput (''Bin A'', ''OptClk'', ''High'');');
-% %      evalin('base','s.SetTimeGateInput (''Bin B'', ''OptClk'', ''High'');');
-%      evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINA_INPUTSEL'',0);');
-%      evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINB_INPUTSEL'',0);');
-%      evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINA_OUT_ENABLE'',1);');
-%      evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINB_OUT_ENABLE'',1);');
+%      assignin('base', 'BinAPos1', 0);
+%      assignin('base', 'BinAPos2', 13); %7 3 10 %12 15 26800
+%      assignin('base', 'BinBPos1', 0);
+%      assignin('base', 'BinBPos2', 16); %14 6 20 %12 18
+%      
+%      assignin('base', 'BinADAC', 13);%13
+%      assignin('base', 'BinBDAC',13);%13
+%      evalin('base','s.SetPulseGen(BinAPos1, BinAPos2, BinADAC, BinBPos1, BinBPos2, BinBDAC);');
+%     % evalin('base','trigger(s.okComms, s.bank, ''PROG_CTRL_SR'')');% 
+% 
+% %      evalin('base','s.SetTimeGateInput (''Bin A'', ''PulseGen'');');
+% %       evalin('base','s.SetTimeGateInput (''Bin B'', ''PulseGen'');');
+%       evalin('base','s.SetTimeGateInput (''Bin A'', ''OptClk'', ''High'');');
+%       evalin('base','s.SetTimeGateInput (''Bin B'', ''OptClk'', ''High'');');
+%       evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINA_INPUTSEL'',0);');
+%       evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINB_INPUTSEL'',0);');
+%       evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINA_OUT_ENABLE'',1);');
+%       evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_SPI_BINB_OUT_ENABLE'',1);');
 
 %note: voltage settings are exposure dependent!
 evalin('base','s.SetExposureMode(6);');
-evalin('base','s.SetVoltage(''VG'',3.3);');%0.7 !!!
+evalin('base','s.SetVoltage(''VG'',3.3);');%0.9,0.7 3.3!!! Try setting to 0.7V for HDR work
 evalin('base','s.SetVoltage(''V3V3'',3.3);');%3.3
-evalin('base','s.SetVoltage(''V2V7'',2.9);');%2.7 2.9
+evalin('base','s.SetVoltage(''V2V7'',2.9);');%2.7 2.9!!!
 evalin('base','s.SetVoltage(''V3V6'',3.6);');%3.6
 % evalin('base','s.SetVoltage(''DAC6'',2.9);');%2.7
 % evalin('base','s.SetVoltage(''DAC5'',3.6);');%3.6
-evalin('base','s.SetVoltage(''VS'',0.1);'); %0.15 !!!
-evalin('base','s.SetVoltage(''VHV'',15.5);');%18 !!!
-evalin('base','s.SetVoltage(''VQ'',1);');
+evalin('base','s.SetVoltage(''VS'',0.1);'); %0.15 0.1!!!
+evalin('base','s.SetVoltage(''VHV'',13.5+2);');%18 15.5!!!
+evalin('base','s.SetVoltage(''VQ'',0+0.7);');%1!!
 evalin('base','s.SetVoltage(''VREF'',1.2);'); %1.2 !!!
 evalin('base','s.SetVoltage(''IBIAS2'',1.1);');%1.1
+evalin('base','s.SetVoltage(''V1V2'',1.09);');%1.1
+%         V1V2 = 1.2; % GO1 Logic
+%         V3V3 = 3.3; % GO2 Logic, Disable Buffer, Output Op Amps
+%         V3V6 = 3.6; % Time Gate & Reset Buffer VDD
+%         V2V7 = 2.7; % Pixel Array VDD
 evalin('base','s.SetExposureTime(100.32);');
 evalin('base','s.SetResetTime(20,100);');
 assignin('base', 'gexp', 0); %start with rolling shutter
@@ -296,10 +287,10 @@ assignin('base','y1',1);
 assignin('base','y2',240);
 assignin('base', 'file_name', 'spc_data');
 assignin('base','blocks',1);
-assignin('base', 'bitplanes',10000);
+assignin('base', 'bitplanes',1000);
 assignin('base', 'stop', 0);
-%evalin('base','load(''bfrm'')');
-evalin('base','load(''C:\SPAD\SPCIMAGER_AA_USB3\SPCIMAGER_AA_USB3\Opal Kelly\bfrm'')');
+assignin('base', 'trig', 0);
+evalin('base','load(''bfrm'')');
 %    timeout(evalin('base','s.okComms'),10);
 
 evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',1)');
@@ -506,24 +497,38 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % % % evalin('base',['s.SetVoltage(''VHV'',',num2str(Vrange(v)),');']);
 % % 
 
-% % % for an=1:1,
-% % %     
-% % % Erange = logspace(log10(0.2),log10(200),20);
-% % %  
-% % % for v=1:20,
- 
-%evalin('base',['s.SetVoltage(''VHV'',',num2str(Vrange(v)),');']);
-
+% % % % Vrange = [14:0.5:16];
+% % % % for an=1:5,
+% % % % evalin('base',['s.SetVoltage(''VHV'',',num2str(Vrange(an)),');']);
+% % % % %%%%for an=1:41,
+% % % % %     
+% % % % Erange = logspace(log10(0.2),log10(200),20);
+% % % % %Erange = logspace(log10(1),log10(1),20);
+% % % %  
+% % % % for v=1:20,
+% % % %  
+% % % % %evalin('base',['s.SetVoltage(''VHV'',',num2str(Vrange(v)),');']);
+% % % % %2.54!!
+% % % % %13.4!
 format shortg
 c = clock;
 dirname=[num2str(c(1)),'_',num2str(c(2)),'_',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',num2str(floor(c(6)))];
 mkdir(dirname)
  
+pause on;
+
 blocks=evalin('base','blocks');
 bitplanes=evalin('base','bitplanes');
 file_name=evalin('base','file_name');
 gexp=evalin('base','gexp');
-concat = ['s.SetExposures(' num2str(blocks*bitplanes+2*(1-gexp)) ',1)'];
+trig=evalin('base','trig');
+%concat = ['s.SetExposures(' num2str(blocks*bitplanes+2*(1-gexp)) ',1)'];
+%%!!
+
+if trig == 1 ,
+    concat = ['s.SetExposures(' num2str(bitplanes+2*(1-gexp)) ',1)'];
+end;
+concat = ['s.SetExposures(' num2str(bitplanes+2*(1-gexp)) ',1)']; %%was 1000!!
 evalin('base',concat)
 
 y1=evalin('base','y1');
@@ -537,38 +542,63 @@ evalin('base','wireindata(s.okComms,s.bank,''DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EX
 
 exptime=evalin('base','exptime');
 ttime=exptime + 0.32*(1-gexp);
-%%%ttime=Erange(v) + 0.32*(1-gexp);
+%%%%ttime=Erange(v) + 0.32*(1-gexp);
 concat = ['s.SetExposureTime(' num2str(ttime) ')'];
 evalin('base',concat);
 
 frames=bitplanes;%1600
 
-trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'ADC_FIFO_RST');
-trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'EXPOSURE_START_TRIGGER');
+% if trig == 0,
+% trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'ADC_FIFO_RST');
+% trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'EXPOSURE_START_TRIGGER');
+% end;
+pause(ttime/1e6);
+
+         evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',1)');       
+         pause(2e-4*frames);
+         evalin('base','wireindata(s.okComms,s.bank,''SPCIMAGER_CHIP_RESET'',0)');      
+         evalin('base','trigger(s.okComms, s.bank, ''PROG_CTRL_SR'')');
 
 for ti=1:blocks,
-    tic
+      tic
     %trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'PROG_CTRL_SR');
     %trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'ADC_FIFO_RST');
     %trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'EXPOSURE_START_TRIGGER');
-    
+    if trig == 0,
+      trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'ADC_FIFO_RST');
+      trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'EXPOSURE_START_TRIGGER');
+    end;
+    if trig == 1,
+        trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'ADC_FIFO_RST');       
+        updatetriggerouts(evalin('base','s.okComms'));
+        updatetriggerouts(evalin('base','s.okComms'));
+       while ~istriggered(evalin('base','s.okComms'), 96, 1)
+            updatetriggerouts(evalin('base','s.okComms'));
+        end
+%    trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'PROG_CTRL_SR');
+%    trigger(evalin('base','s.okComms'), evalin('base','s.bank'),'EXPOSURE_START_TRIGGER');        
+    end;
+       
     % Grab Image
     %    tempdata = zeros(32+4*yrange*10*(frames+(1-gexp)),1,'uint8');
     %tempdata = evalin('base',['readfromblockpipeout(s.okComms, 163,16, 240*10*',num2str(frames),'*4)']);
-    tempdata = readfromblockpipeout(evalin('base','s.okComms'),163,128,yrange*10*(frames+2*(ti==1)*(1-gexp))*4);
-    %%%concat= [num2str(an) '_' num2str(v) file_name num2str(ti) '.bin'];
+    %tempdata = readfromblockpipeout(evalin('base','s.okComms'),163,128,yrange*10*(frames+2*(ti==1)*(1-gexp))*4);
+
+    tempdata = readfromblockpipeout(evalin('base','s.okComms'),163,128,yrange*10*(frames+2*(1-gexp))*4);
+
+    %%%%concat= [num2str(an) '_' num2str(v) file_name num2str(ti) '.bin'];
     concat= [dirname '/' file_name num2str(ti) '.bin'];
     %    savefast(concat,'tempdata','yrange','gexp') %change!
     fileid = fopen(concat,'w'); %'a'
-    fwrite(fileid,[ti;yrange;gexp;tempdata(:)]);
+    fwrite(fileid,[1;yrange;gexp;tempdata(:)]);
     fclose(fileid);
     %    averageTime = toc/frames
     clear tempdata
-    toc
+        toc
  end;
-% % % end;
-% % % keyboard;
-% % % end;
+%%%%end;
+%%%%keyboard;
+%%%%end;
 h = msgbox('Data Capture Complete');
 
 % --- Executes on button press in pushbutton7.
@@ -579,9 +609,10 @@ function pushbutton9_Callback(hObject, eventdata, handles)
 %uiopen('matlab');
 [filename,pathname]=uigetfile;
 fileid=fopen([pathname filename]);
+%tempdata=uint8(fread(fileid));
 tempdata=fread(fileid);
 fclose(fileid);
-ti=tempdata(1);
+ti=tempdata(1); 
 yrange=tempdata(2);
 gexp=tempdata(3);
 data_dim=size(tempdata(4+yrange*10*8*(1-gexp)*(ti==1):end));
@@ -612,7 +643,7 @@ for l=1:blocks,
         %       sum_frame=sum_frame+c_frame;
         sum_frame=rot90(reshape(frame(1+(i-1)*fdata:fdata+(i-1)*fdata),320,yrange));
     end
-    colormap('gray');
+    colormap('default');
     %imwrite(logical(sum_frame),[num2str(dname),'\image',num2str(ti),'_',num2str(l),'.tif'],'Compression','none');
     imwrite(uint8(sum_frame),[num2str(dname),'\image',num2str(ti),'_',num2str(l),'.tif'],'Compression','none');
     
@@ -705,3 +736,13 @@ function edit5_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in togglebutton3.
+function togglebutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to togglebutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+trig=evalin('base','trig');
+assignin('base', 'trig', 1-trig);
+% Hint: get(hObject,'Value') returns toggle state of togglebutton3
