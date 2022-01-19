@@ -154,8 +154,8 @@ class SPCIMAGER():
         self.com.wireindata(bank, 'ADC_PU', 1)
         
         
-        #self.SetTimeGateInput('Bin A', 'ExtClk')
-        #self.SetTimeGateInput('Bin B', 'ExtClk')
+        self.SetTimeGateInput('Bin A', 'ExtClk','High')
+        self.SetTimeGateInput('Bin B', 'ExtClk', 'High')
         self.SetExposureTime(self.ExposureTime)
         
         self.SetExposureMode(0)
@@ -315,6 +315,106 @@ class SPCIMAGER():
         
         
         
+    def SetTimeGateInput(self, bin_, input_, offset_sel):
+        
+        
+        self.ConnectCheck()
+        ltp = bin_.lower()
+        
+        if ltp == 'bin a':
+            tp = 'a'
+        elif ltp == 'bin b':
+            tp = 'b'
+        else:
+            print(' * ERROR: Time gate Bin variable must equal Bin A or Bin B.')
+            return 
+            
+        lst = input_.lower()
+        
+        if lst == 'pulsegen':
+            lst_sel = 0
+            ip_sel = 0
+            os_sel = 0
+            
+        elif lst == 'optclk':
+            lt_sel =1
+            ip_sel = 0
+            
+            loff = offset_sel.lower()
+        
+            if loff == 'low':
+                os_se = 0
+            elif loff == 'high':
+                os_sel = 1
+            else:
+                print(' * ERROR: Offset_Sel variable must equal High or Low.')
+                return
+        elif lst == 'extclk':
+            lt_sel = 0
+            ip_sel = 1
+            os_sel = 0
+        else:
+            print( '* ERROR: Input variable must equal PulseGen, OptClk or ExtClk.')
+            return
+        
+        
+        
+        #Bin A
+        if tp == 'a':
+            
+            
+            
+            if lst == 'pulsegen':
+                print(' * Bin A Time Gate set to External Clock through Pulse Gen.')
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINA_DELAYGEN_LT_SEL',0 )
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINA_INPUTSEL',0 )
+                self.BinAInputSel = 'PulseGen'
+                
+            elif lst == 'optclk':
+                print(' * Bin A Time Gate set to Optical Clock through Pulse Gen.')
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINA_DELAYGEN_LT_SEL',1 )
+                self.BinAInputSel = 'OptClk'
+                
+                if os_sel:
+                    print(' * Optical Clock offset set high.')
+                    self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINA_DELAYGEN_OFFSET_SEL',1) 
+                else:
+                    print(' * Optical Clock offset set low.')
+                    self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINA_DELAYGEN_OFFSET_SEL',0)
+            
+            else:
+                print(' * Bin A Time Gate set to External Clock. Pulse Gen is bypassed.')
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINA_INPUTSEL',1)
+                self.BinAInputSel = 'ExtClk'
+                
+                
+        #Bin B
+        else:
+             
+            if lst == 'pulsegen':
+                print(' * Bin B Time Gate set to External Clock through Pulse Gen.')
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINB_DELAYGEN_LT_SEL',0)
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINB_INPUTSEL',0)
+                self.BinBInputSel = 'PulseGen'
+            elif lst == 'optclk':
+                print(' * Bin B Time Gate set to Optical Clock through Pulse Gen.')
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINB_DELAYGEN_LT_SEL',1)
+                self.BinBInputSel = 'OptClk'
+                if os_sel:
+                    print(' * Optical Clock offset set high.')
+                    self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINB_DELAYGEN_OFFSET_SEL',1)
+                else:
+                    print(' * Optical Clock offset set low.')
+                    self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINB_DELAYGEN_OFFSET_SEL',0)
+            else:
+                print(' * Bin B Time Gate set to External Clock. Pulse Gen is bypassed.')
+                self.com.wireindata(self.bank, 'SPCIMAGER_SPI_BINB_INPUTSEL',1)
+                self.BinBInputSel = 'ExtClk'
+            
+        
+        self.com.trigger(self.bank, 'PROG_CTRL_SR')
+                
+                
     
     def SensorReset(self):
         
