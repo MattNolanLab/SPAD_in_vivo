@@ -14,3 +14,11 @@ Analysis codes for our ex vivo imaging data of Voltron with SPAD (Tian's experim
 ## SPAD_Python
 
 Python files to implement Python-based GUI. 
+
+Sensor is now working on Python side. In order to test the sensor:
+
+-Open the file locations in the terminal. 
+-Run test_sensor.py 
+-You should see the data from the sensor on the console. 
+
+More user friendly design is coming! 
