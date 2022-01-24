@@ -21,4 +21,12 @@ Sensor is now working on Python side. In order to test the sensor:
 -Run test_sensor.py 
 -You should see the data from the sensor on the console. 
 
+
+It is also possible to record sensor data for interested amount of time. To do so, 
+
+-Open the files location on terminal. 
+-Run the record_sensor.py file (terminal code: Python3 record_sensor.py)
+-The console will then ask user input for recording time. Simply enter the time in terms of bitplanes and go. 
+-You should see the fiber photometry recording plot on the working directory. 
+
 More user friendly design is coming! 
