@@ -14,7 +14,7 @@ Script for test the sensor.
 
 
 from SPCIMAGERAA import SPCIMAGER
-
+from SPADAnalysis import SPADAnalysis
 
 #instantiate the sensor class
 s = SPCIMAGER('SPCIMAGER_TOP.bit')
@@ -25,5 +25,15 @@ s.SensorConnect(s.bank)
 #Start the sensor
 s.SensorStart()
 
+recording_time = int(input("Please enter the duration of the recording: "))
+
 #Show the total photon counts from the sensor
-s.ShowData()
+s.RecordData(recording_time)
+
+
+
+p = SPADAnalysis("sample.bin", recording_time)
+
+
+
+

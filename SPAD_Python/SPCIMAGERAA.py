@@ -10,6 +10,10 @@ import numpy as np
 import ok
 from OK_Comms import OK_Comms
 import time
+import datetime as dt
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from Scope import Scope
 
 class SPCIMAGER():
     
@@ -128,6 +132,11 @@ class SPCIMAGER():
         self.bank = self.com.bank
         
         
+        
+        
+        
+        
+        
     def SensorConnect(self, bank):
         
         if self.SensorStatus == 'Connected':
@@ -221,7 +230,7 @@ class SPCIMAGER():
         self.y2 = 240
         self.file_name = 'spc_data'
         self.blocks = 1
-        self.bitplanes = 100000
+        self.bitplanes = 10000
         self.stop = 0
         
         self.com.wireindata(self.bank, 'SPCIMAGER_CHIP_RESET', 1)
@@ -231,8 +240,13 @@ class SPCIMAGER():
         
         
         
+        
+    
+        
     def ShowData(self):
         
+        
+        last_20_points =[]
         while 1:
         
             gexp = self.gexp
@@ -257,20 +271,48 @@ class SPCIMAGER():
             self.com.trigger(self.bank, 'EXPOSURE_START_TRIGGER')    
             
             
-            tempdata = self.com.readfromblockpipeout(162, 32, 240*320*4)
+            tempdata = self.com.readfromblockpipeout(162, 32, 240*10*4)
             
-            data = np.frombuffer(tempdata)
+            data = bytearray(tempdata)
+            dtype = np.dtype('B')
+            data_new = np.frombuffer(data,dtype)
+            #data = np.frombuffer(tempdata)
             
-            print('signals ', data.sum())
+            print('signals ', data_new.sum())
+            #print('signals ', tempdata)
+            
+            #kazma = int.from_bytes(data,"big")
+            
+            last_20_points.append(data_new.sum())
+            last_20_points = last_20_points[-10000:]
+            
+            ani = FuncAnimation(plt.gcf(), self.animate(last_20_points), interval=1000)
+
+            plt.tight_layout()
+            plt.show()
             
             
-            
-            
+
+
+
+    def animate(i, data):
         
-    def RecordData(self):
+            y1 = data
+    
+        
+            plt.cla()
+        
+            plt.plot(y1, label='Channel 1')
+            #plt.plot(y2, label='Channel 2')
+        
+            plt.legend(loc='upper left')
+            plt.tight_layout()       
+            
+    
+        
+    def RecordData(self, bitplanes):
         
         blocks = self.blocks
-        bitplanes = self.bitplanes
         gexp = self.gexp
         
         self.SetExposures(int(blocks*bitplanes + 2*(1-gexp)), 1)
