@@ -30,3 +30,5 @@ It is also possible to record sensor data for interested amount of time. To do s
 -You should see the fiber photometry recording plot on the working directory. 
 
 More user friendly design is coming! 
+
+**GUI feature is added. In order to work with GUI, simply open all the files and call the launch_GUI() functions from the terminal. 
