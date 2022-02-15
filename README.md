@@ -11,6 +11,10 @@ I already added a few lines to save a .csv format timestamp (Yifang).
 ## SPAD_ex_vivo_analysis
 Analysis codes for our ex vivo imaging data of Voltron with SPAD (Tian's experiments).
 
+## SPAD_simulation 
+
+A simple jupyter notebook to simulate the sensor for fiber photometry with different sets of LED stimulations. Using this file, the sensor's response can be simulated and shot noise limitation can be observed. 
+
 ## SPAD_Python
 
 Python files to implement Python-based GUI. 
