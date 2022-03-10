@@ -1,4 +1,4 @@
-10#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Wed Jan 19 17:12:20 2022
@@ -32,7 +32,7 @@ s.RecordData(recording_time)
 
 
 
-p = SPADAnalysis("sample.bin", recording_time)
+#p = SPADAnalysis("sample.bin", recording_time)
 
 s.SensorDisconnect()
 

@@ -154,15 +154,22 @@ class SPAD_GUI(QtGui.QWidget):
         #parameters groupbox 
         self.parameters_groupbox = QtGui.QGroupBox('Session paramaters')
         
-        self.recording_time_label = QtGui.QLabel('Recording Time: ')
+        
+        self.block_label = QtGui.QLabel('Blocks: ')
+        self.block_input = QtGui.QLineEdit(self)
+        self.block_input.setFixedWidth(80)
+        
+        self.recording_time_label = QtGui.QLabel('Recording Time (seconds): ')
         self.recording_time_input = QtGui.QLineEdit(self)
         self.recording_time_input.setFixedWidth(80)
         #self.recording_time_input.setMaxLength(12)
-        self.recording_time_input.setAlignment(QtCore.Qt.AlignCenter)
+        #self.recording_time_input.setAlignment(QtCore.Qt.AlignCenter)
         
         
         
         self.parametersgroup_layout = QtGui.QHBoxLayout()
+        self.parametersgroup_layout.addWidget(self.block_label)
+        self.parametersgroup_layout.addWidget(self.block_input)       
         self.parametersgroup_layout.addWidget(self.recording_time_label)
         self.parametersgroup_layout.addWidget(self.recording_time_input)
         self.parameters_groupbox.setLayout(self.parametersgroup_layout)
@@ -333,7 +340,7 @@ class SPAD_GUI(QtGui.QWidget):
         if os.path.isdir(self.data_dir):
             filetype = '.bin'
             date_time = datetime.now()
-            file_name = self.data_dir + "/" + self.subject_ID + date_time.strftime('-%Y-%m-%d-%H%M%S') + filetype
+            file_name = self.data_dir + "/" + self.subject_ID + date_time.strftime('-%Y-%m-%d-%H%M%S')
             #self.clipboard.setText(file_name)
             self.status_text.setText('Recording')
             #self.current_groupbox.setEnabled(False)
@@ -344,8 +351,13 @@ class SPAD_GUI(QtGui.QWidget):
             #self.data_dir_button.setEnabled(False)
             #self.record_clock.start()
             self.recording_time = int(self.recording_time_input.text())
+            self.block_number = int(self.block_input.text())
             print(file_name)
-            self.sensor.RecordData(self.recording_time*10000, file_name)
+            self.sensor.RecordData(self.recording_time*10000, self.block_number, file_name)
+            self.status_text.setText('Recording is done!')
+            self.file_groupbox.setEnabled(True)
+            self.record_button.setEnabled(True)
+            
         else:
             self.data_dir_text.setText('Set valid directory')
             self.data_dir_label.setStyleSheet("color: rgb(255, 0, 0);")

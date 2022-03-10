@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from Scope import Scope
 
+from datetime import datetime
+
 class SPCIMAGER():
     
     def __init__(self, bitfile):
@@ -311,9 +313,10 @@ class SPCIMAGER():
             
     
         
-    def RecordData(self, bitplanes, file_name):
+    def RecordData(self, bitplanes, blocks, file_name):
         
-        blocks = self.blocks
+        #blocks = self.blocks
+        #blocks =3
         gexp = self.gexp
         
         self.SetExposures(int(blocks*bitplanes + 2*(1-gexp)), 1)
@@ -337,22 +340,62 @@ class SPCIMAGER():
         self.com.trigger(self.bank, 'ADC_FIFO_RST' )
         self.com.trigger(self.bank, 'EXPOSURE_START_TRIGGER')
         
+        recording_data = np.zeros((blocks, 3)) # first frame doesnt include anythin so we remove
+        
         for ti in range(1, blocks+1):
             
-            t = time.time()
-            print('frames: ', frames)
+            block_start_time = int(datetime.now().strftime('%H%M%S%f'))
+            #t = time.time()
+            #print('frames: ', frames)
             
-            tempdata = self.com.readfromblockpipeout(163, 128, 240*10*4*frames)
-            #tempdata = self.com.readfromblockpipeout(163, 128, yrange*10*(frames+2*(ti==1)*(1-gexp)*4))
+            if ti == 1:
+                tempdata = self.com.readfromblockpipeout(163, 128, yrange*10*4*(frames+2*(1-gexp)))
+                block_end_time = int(datetime.now().strftime('%H%M%S%f'))
+                #tempdata = [ tempdata]
+                file = open(file_name+'_block_'+str(ti)+'.bin', "w+b")
+                file.write(bytearray(tempdata))
+                file.close()
+                #recording = np.unpackbits(tempdata_array, axis=0)
+                #recording_matrix = recording.reshape((frames+2*(1-gexp), -1))
+                #traces = np.sum(recording_matrix, axis = 1)
+                #tempdata = self.com.readfromblockpipeout(163, 128, yrange*10*(frames+2*(ti==1)*(1-gexp)*4))
+                #recording_data[ti-1, 0]=ti
+                #recording_data[ti-1,1] = block_start_time
+                #recording_data[ti-1,2] = block_end_time
+                #recording_data[ti-1,3:] = traces[-frames:]
+            else:
+                tempdata = self.com.readfromblockpipeout(163, 128, yrange*10*4*frames)
+                block_end_time = int(datetime.now().strftime('%H%M%S%f')) 
+                
+                #tempdata = [ti, tempdata]
+                file = open(file_name+'_block_'+str(ti)+'.bin', "w+b")
+                file.write(bytearray(tempdata))
+                file.close()
+                #tempdata_array = np.asarray(tempdata)
+                #recording = np.unpackbits(tempdata_array, axis=0)
+                #recording_matrix = recording.reshape((frames, -1))
+                #traces = np.sum(recording_matrix, axis = 1)
+                #tempdata = self.com.readfromblockpipeout(163, 128, yrange*10*(frames+2*(ti==1)*(1-gexp)*4))
+                #block_end_time = int(datetime.now().strftime('%H%M%S%f'))                
+                #recording_data[ti-1, 0]=ti
+                #recording_data[ti-1,1] = block_start_time
+                #recording_data[ti-1,2] = block_end_time
+                #recording_data[ti-1,3:] = traces
+            #file = open(file_name, "w+b")
+            #file.write(bytearray(tempdata))
+            #file.close()
             
-            file = open(file_name, "w+b")
-            file.write(bytearray(tempdata))
-            file.close()
-            
-            print('recorded time ', time.time()-t)
+            #print('recorded time ', time.time()-t)
             # print('imaging data ', tempdata)
-            
-        return tempdata
+            #print('kazma')
+            recording_data[ti-1,0]=ti
+            recording_data[ti-1,1]=block_start_time
+            recording_data[ti-1,2]=block_end_time
+            print('block start time : ', block_start_time)
+            print('block end time : ', block_end_time)
+
+        np.savetxt(file_name+'_timing_'+'.csv', recording_data, delimiter=",")
+        return recording_data
             
         
         
