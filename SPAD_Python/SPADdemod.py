@@ -172,11 +172,11 @@ def DemodFreqShift (count_value,fc_g,fc_r,fs=9938.4):
     xf = rfftfreq(sample_number, 1 / fs)
     
     fig, (ax1,ax2) = plt.subplots(nrows=2)
-    ax1.plot(sample_points, count_value,color='b',label='Mixed')
+    ax1.plot(sample_points, count_value,color='b',label='Mixed',linewidth=1)
     ax1.set_xlabel("time in frames")
     ax1.legend(loc='upper right')
     #ax1.set_xlim(0,100)
-    ax2.plot(xf, np.abs(yf),color='b',label='Freq Peaks (rfft)')
+    ax2.plot(xf, np.abs(yf),color='b',label='Freq Peaks (rfft)',linewidth=1)
     ax2.set_xlabel("frequency in Hz")
     ax2.legend(loc='upper right')
     #ax2.set_xlim(0,200)
@@ -184,17 +184,18 @@ def DemodFreqShift (count_value,fc_g,fc_r,fs=9938.4):
     fig.tight_layout() 
     
     '''Remove unwanted low/high frequencies and demodulation'''
-    yf[0:200] = 0 
-    yf[3060:]=0
+    points_per_freq = len(xf) / (fs/2)
+    yf[0:int(200*points_per_freq)] = 0 
+    yf[int(3060*points_per_freq):]=0
     
     mix = irfft(yf)
     
     fig, (ax1,ax2) = plt.subplots(nrows=2)
-    ax1.plot(sample_points, mix,color='b',label='Cleaned Mixed signal')
+    ax1.plot(sample_points, mix,color='b',label='Cleaned Mixed signal',linewidth=1)
     ax1.set_xlabel("time in frames")
     ax1.legend(loc='upper right')
     #ax1.set_xlim(0,100)
-    ax2.plot(xf, np.abs(yf),color='b',label='Freq Peaks (rfft)')
+    ax2.plot(xf, np.abs(yf),color='b',label='Freq Peaks (rfft)',linewidth=1)
     ax2.set_xlabel("frequency in Hz")
     ax2.legend(loc='upper right')
     ax2.set_xlim(-10,2200)
@@ -206,7 +207,6 @@ def DemodFreqShift (count_value,fc_g,fc_r,fs=9938.4):
     yf_r=np.copy(yf)
     
     '''The maximum frequency is half the sample rate'''
-    points_per_freq = len(xf) / (fs/2)
     fc_g_idx = int(points_per_freq * fc_g)
     sideBand=int(points_per_freq * 250) 
     fc_r_idx = int(points_per_freq * fc_r) 
