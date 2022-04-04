@@ -4,6 +4,10 @@
 Created on Tue Sep 14 18:52:39 2021
 
 @author: kurtulus
+
+In this classs, we establish the core mechanisms of the communication between Opal Kelly FPGA
+and Python. To do so, we first define a matrix which states all control channels with their address
+and bits. 
 """
 
 import pandas as pd
@@ -15,10 +19,14 @@ class OK_Comms():
 
     def __init__(self):
         
+        
+        #defining class for Opal Kelly FPGA communication
         self.dev = ok.okCFrontPanel()
         self.fp = ok.FrontPanel()
         self.info = ok.okTDeviceInfo()
         
+        #constructiing the matrix which defines the address and corresponding channels
+        #DO NOT CHANGE THESE SETTINGS!
         df = pd.DataFrame(columns = ['name','addr','size','bit'])
         df.loc[1] = ['OK_LEDs', '00', 8, 0]
         df.loc[2] = ['VHV', '01', 12, 0]
@@ -103,6 +111,13 @@ class OK_Comms():
 
     def ok_header_func(self, OKbitfile):
         
+        """
+        
+        A header function which states the success/unsuccess of communication
+        
+        
+        """
+        
         print('----------------------------')
         print('Opal Kelly to Python Comms')
         print('----------------------------')
@@ -124,7 +139,15 @@ class OK_Comms():
             print(error)
             self.dev.Close()
             
+    
+    
+    
     def CheckOpen(self):
+        """
+        A simple function to check the communication between FPGA and computer
+        
+        """
+        
         print(self.fp.IsOpen())
             
 
@@ -152,6 +175,12 @@ class OK_Comms():
         
     def trigger(self, bank, ProgResetDACName):
         
+        """
+        A communication function which is for triggering
+        
+        
+        """
+        
         length = bank.shape[0]
         
         name = bank['name']
@@ -168,6 +197,14 @@ class OK_Comms():
         
         
     def wireoutdata(self, bank, wirename):
+        
+        """
+        
+        A simple function which reads the data from the specified channels. 
+        
+        """
+        
+        
         length = bank.shape[0]
         
         name = bank['name']
@@ -190,6 +227,14 @@ class OK_Comms():
         
 
     def wireindata(self, bank, wirename, data):
+        
+        
+        """
+        
+        A function which writes the data to the specified channel
+        
+        
+        """
         
         length = bank.shape[0]
         
@@ -218,6 +263,12 @@ class OK_Comms():
         
         
     def readfromblockpipeout(self, epaddr, blksize, bsize):
+        
+        """
+        
+        A function which reads the data from blocked-pipes. 
+        
+        """
         
         psize = bsize
         

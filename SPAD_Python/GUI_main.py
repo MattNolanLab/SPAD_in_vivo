@@ -10,6 +10,7 @@ import os
 import sys
 import traceback
 from pyqtgraph.Qt import QtGui, QtCore
+import pyqtgraph as pg
 
 from datetime import datetime
 
@@ -20,6 +21,8 @@ from SPADAnalysis import SPADAnalysis
 
 from plotting import Analog_plot
 
+import numpy as np
+
 
 
 class SPAD_GUI(QtGui.QWidget):
@@ -28,7 +31,7 @@ class SPAD_GUI(QtGui.QWidget):
         
         super(QtGui.QWidget, self).__init__(parent)
         self.setWindowTitle('SPAD-Photometry')
-        self.setGeometry(100,100,700,700) #Left, top, width, height
+        self.setGeometry(100,100,900,900) #Left, top, width, height
         
         __file__ = 'GUI_main.py'
         self.board = None
@@ -58,15 +61,15 @@ class SPAD_GUI(QtGui.QWidget):
 
         self.board_groupbox = QtGui.QGroupBox('Board')
 
-        self.port_label = QtGui.QLabel("Serial port:")
-        self.port_select = QtGui.QComboBox()
+        #self.port_label = QtGui.QLabel("Serial port:")
+        #self.port_select = QtGui.QComboBox()
         self.connect_button = QtGui.QPushButton('Connect')
         self.connect_button.setIcon(QtGui.QIcon("GUI/icons/connect.svg"))
         self.connect_button.setFixedWidth(110)
 
         self.boardgroup_layout = QtGui.QHBoxLayout()
-        self.boardgroup_layout.addWidget(self.port_label)
-        self.boardgroup_layout.addWidget(self.port_select)
+        #self.boardgroup_layout.addWidget(self.port_label)
+        #self.boardgroup_layout.addWidget(self.port_select)
         self.boardgroup_layout.addWidget(self.connect_button)
         self.board_groupbox.setLayout(self.boardgroup_layout)
 
@@ -128,7 +131,7 @@ class SPAD_GUI(QtGui.QWidget):
         self.data_dir_button = QtGui.QPushButton('')
         self.data_dir_button.setIcon(QtGui.QIcon("GUI/icons/folder.svg"))
         self.data_dir_button.setFixedWidth(30)
-        self.subject_label = QtGui.QLabel("Subject ID:")
+        self.subject_label = QtGui.QLabel("File Name:")
         self.subject_text = QtGui.QLineEdit(self.subject_ID)
         self.subject_text.setFixedWidth(80)
         self.subject_text.setMaxLength(12)
@@ -194,7 +197,7 @@ class SPAD_GUI(QtGui.QWidget):
 
         self.start_button.clicked.connect(self.start)
         self.record_button.clicked.connect(self.record)
-        #self.stop_button.clicked.connect(self.stop)
+        self.stop_button.clicked.connect(self.stop)
         
         
         self.gui_title = QtGui.QLabel('SPAD-Photometry')
@@ -208,7 +211,13 @@ class SPAD_GUI(QtGui.QWidget):
         
         # Plots
 
-        self.analog_plot  = Analog_plot(self)
+        self.myplot = pg.PlotWidget(title="Analog signal" , labels={'left':'Photon Counts'})
+        self.myplot.setXRange(0,-1000)
+        self.myplot.setYRange(0,100000)
+        self.legend = self.myplot.addLegend(offset=(10, 10))
+        self.plot_1  = self.myplot.plot(pen=pg.mkPen('g'), name='Background Signal'  )
+        self.plot_2  = self.myplot.plot(pen=pg.mkPen('r'), name='Original Signal')
+        #self.analog_plot  = Analog_plot(self)
         #self.digital_plot = Digital_plot()
         #self.event_triggered_plot = Event_triggered_plot()
 
@@ -223,7 +232,9 @@ class SPAD_GUI(QtGui.QWidget):
         self.horizontal_layout_4 = QtGui.QHBoxLayout()
         self.horizontal_layout_5 = QtGui.QHBoxLayout()
         self.horizontal_layout_6 = QtGui.QHBoxLayout()
-        self.plot_splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+        #self.plot_splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+
+        
 
 
         self.horizontal_layout_1.addWidget(self.gui_title)
@@ -235,10 +246,12 @@ class SPAD_GUI(QtGui.QWidget):
         #self.horizontal_layout_1.addWidget(self.settings_groupbox)
         #self.horizontal_layout_1.addWidget(self.current_groupbox)
         self.horizontal_layout_6.addWidget(self.acquisition_groupbox)
-        self.plot_splitter.addWidget(self.analog_plot)
+        #self.plot_splitter.addWidget(self.analog_plot)
         #self.plot_splitter.addWidget(self.digital_plot.axis)
         #self.plot_splitter.addWidget(self.event_triggered_plot.axis)
-        self.plot_splitter.setSizes([100,60,100])
+        #self.plot_splitter.setSizes([100,60,100])
+        self.vertical_layout.addWidget(self.myplot)
+
 
         self.vertical_layout.addLayout(self.horizontal_layout_1)
         self.vertical_layout.addLayout(self.horizontal_layout_2)
@@ -246,22 +259,31 @@ class SPAD_GUI(QtGui.QWidget):
         self.vertical_layout.addLayout(self.horizontal_layout_4)
         self.vertical_layout.addLayout(self.horizontal_layout_5)
         self.vertical_layout.addLayout(self.horizontal_layout_6)
-        self.vertical_layout.addWidget(self.plot_splitter)
+        #self.vertical_layout.addWidget(self.plot_splitter)
+        #self.vertical_layout.addWidget(self.myplot)
+        
+        
+
+
 
         self.setLayout(self.vertical_layout)
 
+
+        #print('I AM HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1')
+        self.data1 = np.zeros(1000)
         # Setup Timers.
 
-        self.update_timer = QtCore.QTimer() # Timer to regularly call process_data()
+
+        #self.update_timer = QtCore.QTimer() # Timer to regularly call process_data()
         #self.update_timer.timeout.connect(self.process_data)
-        self.refresh_timer = QtCore.QTimer() # Timer to regularly call refresh() when not running.
+        #self.refresh_timer = QtCore.QTimer() # Timer to regularly call refresh() when not running.
         #self.refresh_timer.timeout.connect(self.refresh)
 
         # Initial setup.
 
         #self.disconnect() # Set initial state as disconnected.
         #self.refresh()    # Refresh ports list.
-        self.refresh_timer.start(self.refresh_interval) 
+        #self.refresh_timer.start(self.refresh_interval) 
         
     def connect(self):
         try:
@@ -322,6 +344,10 @@ class SPAD_GUI(QtGui.QWidget):
         #self.refresh_timer.stop()
         #self.update_timer.start(config.update_interval)
         
+        
+        #data1 = data_new.sum()
+        #self.curve1 = self.myplot.plot(self.data1)
+        
         self.sensor.SensorStart()
         self.running = True
         # Update UI.
@@ -332,6 +358,14 @@ class SPAD_GUI(QtGui.QWidget):
         self.record_button.setEnabled(True)
         self.stop_button.setEnabled(True)
         self.status_text.setText('Running')
+        
+        # update all plots
+
+        
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(50)
+        self.timer.timeout.connect(self.update)
+        self.timer.start()
         
         
     def record(self):
@@ -382,6 +416,7 @@ class SPAD_GUI(QtGui.QWidget):
         #self.data_dir_button.setEnabled(True)
         self.status_text.setText('Connected')
         #self.record_clock.stop()
+        self.timer.stop()
         
         
     def test_data_path(self):
@@ -396,8 +431,21 @@ class SPAD_GUI(QtGui.QWidget):
             QtGui.QFileDialog.getExistingDirectory(self, 'Select data folder', self.data_dir))
         
         
+    def update(self):
+        print('update is runing')
+        global data1, ptr1
+        self.data1[:-1] = self.data1[1:]  # shift data in the array one sample left
+                                # (see also: np.roll)
+        new_data = np.unpackbits(self.sensor.GetLiveData()).sum()                     
+        self.data1[-1] =new_data
+        self.x = np.linspace(-1000, 0,1000)
+        self.plot_2.setData(self.x, self.data1)
+        
+        
+        
+
 def launch_GUI():
-        '''Launch the pyPhotometry GUI.'''
+        '''Launch the GUI.'''
         app = QtGui.QApplication([])  # Start QT
         spad_GUI = SPAD_GUI()
         spad_GUI.show()

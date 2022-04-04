@@ -4,6 +4,14 @@
 Created on Sun Dec  5 22:54:11 2021
 
 @author: kurtulus
+
+
+SPCIMAGER is a class which contains the necessary methods for operating the sensor. 
+
+Initial method contains basic set-up for PCB. 
+
+
+
 """
 
 import numpy as np
@@ -242,6 +250,58 @@ class SPCIMAGER():
         
         
         
+     
+        
+    def GetLiveData(self):
+        
+        
+            last_points =[]
+            #while 1:
+        
+            gexp = self.gexp
+            self.com.wireindata(self.bank, 'DEBUG_FORCE_GLOBAL_RESET_FOR_ANA_EXPOSURE', 1-gexp)
+            
+            exptime = self.exptime
+            ttime = exptime +0.32*(1-gexp)
+            self.SetExposureTime(ttime)
+            
+            n = self.n
+            self.SetExposures(n,1)
+            
+            y1 = self.y1
+            y2 = self.y2
+            
+            self.SetRegionOfInterest(1,240,0,319)
+            
+            self.com.wireindata(self.bank, 'SPCIMAGER_CHIP_RESET', 1)
+            time.sleep(2e-4*n)
+            self.com.wireindata(self.bank, 'SPCIMAGER_CHIP_RESET', 0)
+            self.com.trigger(self.bank, 'PROG_CTRL_SR')
+            self.com.trigger(self.bank, 'ADC_FIFO_RST' )
+            self.com.trigger(self.bank, 'EXPOSURE_START_TRIGGER')    
+            
+            
+            tempdata = self.com.readfromblockpipeout(162, 32, 240*320*4)
+            
+            data = bytearray(tempdata)
+            dtype = np.dtype('B')
+            data_new = np.frombuffer(data,dtype)
+            #data = np.frombuffer(tempdata)
+            
+            print('signals ', data_new.sum())
+            #print('signals ', tempdata)
+            
+            #kazma = int.from_bytes(data,"big")
+            
+            last_points.append(data_new)
+            #last_points = last_points[-10000:]
+            
+            #ani = FuncAnimation(plt.gcf(), self.animate(last_20_points), interval=1000)
+
+            #plt.tight_layout()
+            #plt.show()
+            
+            return tempdata
         
     
         
@@ -792,7 +852,6 @@ class SPCIMAGER():
         
         
      
-        
         
         
         
