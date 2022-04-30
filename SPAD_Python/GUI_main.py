@@ -31,7 +31,7 @@ class SPAD_GUI(QtGui.QWidget):
         
         super(QtGui.QWidget, self).__init__(parent)
         self.setWindowTitle('SPAD-Photometry')
-        self.setGeometry(100,100,900,900) #Left, top, width, height
+        self.setGeometry(100,100,1200,950) #Left, top, width, height
         
         __file__ = 'GUI_main.py'
         self.board = None
@@ -162,7 +162,7 @@ class SPAD_GUI(QtGui.QWidget):
         self.block_input = QtGui.QLineEdit(self)
         self.block_input.setFixedWidth(80)
         
-        self.recording_time_label = QtGui.QLabel('Recording Time (seconds): ')
+        self.recording_time_label = QtGui.QLabel('Recording Time (block/bitplanes): ')
         self.recording_time_input = QtGui.QLineEdit(self)
         self.recording_time_input.setFixedWidth(80)
         #self.recording_time_input.setMaxLength(12)
@@ -210,13 +210,40 @@ class SPAD_GUI(QtGui.QWidget):
         self.title_lab_name.setFont(QtGui.QFont('Times', 20))
         
         # Plots
+        
+        
+        #self.display_layout = QtGui.QHBoxLayout()
+        self.image_region = pg.PlotWidget()
+        self.image_region.setXRange(0,320)
+        self.image_region.setYRange(0,240)
+        #self.display_layout.addWidget(self.image_region)
+        self.sensor_image = pg.ImageItem()
+        self.image_region.addItem(self.sensor_image)
+        self.ROI_plot =  pg.PlotWidget(title="Analog signal" , labels={'left':'Photon Counts'})
+        self.ROI_plot.setXRange(0,-1000)
+        self.ROI_plot.setYRange(0,10000)
+        self.ROI_plot.setFixedWidth(600)
+        
+        self.legend = self.ROI_plot.addLegend(offset=(10, 10))
+        self.plot_1  = self.ROI_plot.plot(pen=pg.mkPen('r'), name='Background Signal'  )
+        self.plot_2  = self.ROI_plot.plot(pen=pg.mkPen('g'), name='Original Signal')
+        
+        self.ROI_region_red = pg.CircleROI([10, 10], [50, 50], pen=pg.mkPen('r', width=4.5))
+        self.ROI_region_green = pg.CircleROI([100, 100], [50, 50], pen=pg.mkPen('g', width=4.5))
+        self.image_region.addItem(self.ROI_region_red)
+        self.image_region.addItem(self.ROI_region_green)
+        self.ROI_region_red.setZValue(10)
+        self.ROI_region_green.setZValue(10)
+        #self.display_layout.addWidget(self.ROI_plot)
+        
+        
 
-        self.myplot = pg.PlotWidget(title="Analog signal" , labels={'left':'Photon Counts'})
-        self.myplot.setXRange(0,-1000)
-        self.myplot.setYRange(0,100000)
-        self.legend = self.myplot.addLegend(offset=(10, 10))
-        self.plot_1  = self.myplot.plot(pen=pg.mkPen('g'), name='Background Signal'  )
-        self.plot_2  = self.myplot.plot(pen=pg.mkPen('r'), name='Original Signal')
+        #self.myplot = pg.PlotWidget(title="Analog signal" , labels={'left':'Photon Counts'})
+        #self.myplot.setXRange(0,-1000)
+        #self.myplot.setYRange(0,100000)
+        #self.legend = self.myplot.addLegend(offset=(10, 10))
+        #self.plot_1  = self.myplot.plot(pen=pg.mkPen('g'), name='Background Signal'  )
+        #self.plot_2  = self.myplot.plot(pen=pg.mkPen('r'), name='Original Signal')
         #self.analog_plot  = Analog_plot(self)
         #self.digital_plot = Digital_plot()
         #self.event_triggered_plot = Event_triggered_plot()
@@ -232,25 +259,27 @@ class SPAD_GUI(QtGui.QWidget):
         self.horizontal_layout_4 = QtGui.QHBoxLayout()
         self.horizontal_layout_5 = QtGui.QHBoxLayout()
         self.horizontal_layout_6 = QtGui.QHBoxLayout()
+        self.horizontal_layout_7 = QtGui.QHBoxLayout()
         #self.plot_splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
 
         
 
-
-        self.horizontal_layout_1.addWidget(self.gui_title)
-        self.horizontal_layout_2.addWidget(self.title_lab_name)
-        self.horizontal_layout_3.addWidget(self.file_groupbox)
-        self.horizontal_layout_4.addWidget(self.status_groupbox)
-        self.horizontal_layout_4.addWidget(self.board_groupbox)
+        self.horizontal_layout_1.addWidget(self.image_region)
+        self.horizontal_layout_1.addWidget(self.ROI_plot)
+        self.horizontal_layout_2.addWidget(self.gui_title)
+        self.horizontal_layout_3.addWidget(self.title_lab_name)
+        self.horizontal_layout_4.addWidget(self.file_groupbox)
+        self.horizontal_layout_5.addWidget(self.status_groupbox)
+        self.horizontal_layout_5.addWidget(self.board_groupbox)
         self.horizontal_layout_5.addWidget(self.parameters_groupbox)
         #self.horizontal_layout_1.addWidget(self.settings_groupbox)
         #self.horizontal_layout_1.addWidget(self.current_groupbox)
-        self.horizontal_layout_6.addWidget(self.acquisition_groupbox)
+        self.horizontal_layout_7.addWidget(self.acquisition_groupbox)
         #self.plot_splitter.addWidget(self.analog_plot)
         #self.plot_splitter.addWidget(self.digital_plot.axis)
         #self.plot_splitter.addWidget(self.event_triggered_plot.axis)
         #self.plot_splitter.setSizes([100,60,100])
-        self.vertical_layout.addWidget(self.myplot)
+        #self.vertical_layout.addWidget(self.display_region)
 
 
         self.vertical_layout.addLayout(self.horizontal_layout_1)
@@ -259,6 +288,8 @@ class SPAD_GUI(QtGui.QWidget):
         self.vertical_layout.addLayout(self.horizontal_layout_4)
         self.vertical_layout.addLayout(self.horizontal_layout_5)
         self.vertical_layout.addLayout(self.horizontal_layout_6)
+        self.vertical_layout.addLayout(self.horizontal_layout_7)
+        
         #self.vertical_layout.addWidget(self.plot_splitter)
         #self.vertical_layout.addWidget(self.myplot)
         
@@ -271,6 +302,7 @@ class SPAD_GUI(QtGui.QWidget):
 
         #print('I AM HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1')
         self.data1 = np.zeros(1000)
+        self.data2 = np.zeros(1000)
         # Setup Timers.
 
 
@@ -363,7 +395,7 @@ class SPAD_GUI(QtGui.QWidget):
 
         
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(50)
+        self.timer.setInterval(1)
         self.timer.timeout.connect(self.update)
         self.timer.start()
         
@@ -419,6 +451,7 @@ class SPAD_GUI(QtGui.QWidget):
         self.timer.stop()
         
         
+        
     def test_data_path(self):
         # Checks whether data dir and subject ID are valid.
         self.data_dir = self.data_dir_text.text()
@@ -436,11 +469,29 @@ class SPAD_GUI(QtGui.QWidget):
         global data1, ptr1
         self.data1[:-1] = self.data1[1:]  # shift data in the array one sample left
                                 # (see also: np.roll)
-        new_data = np.unpackbits(self.sensor.GetLiveData()).sum()                     
-        self.data1[-1] =new_data
-        self.x = np.linspace(-1000, 0,1000)
-        self.plot_2.setData(self.x, self.data1)
+        self.data2[:-1] = self.data2[1:]  
+        #new_data = np.unpackbits(self.sensor.GetLiveData()).sum()   
+
+        new_data = np.asarray(list(self.sensor.GetLiveData()))
+        converted_data = new_data.reshape((-1,4))
+        sum_bits = converted_data.sum(axis=1)
+        self.image_data = sum_bits.reshape(240,320)
+        self.sensor_image.setImage(np.rot90(self.image_data))                  
+        #self.data1[-1] =new_data
+        #self.x = np.linspace(-1000, 0,1000)
+        #self.plot_2.setData(self.x, self.data1)
         
+        self.green_signal = self.ROI_region_green.getArrayRegion(self.image_data, self.sensor_image).sum()
+        self.red_signal = self.ROI_region_red.getArrayRegion(self.image_data, self.sensor_image).sum()
+        
+        
+        new_data = self.red_signal
+        #self.data2[:-1] = self.data2[1:]                   
+        self.data1[-1] =new_data
+        self.data2[-1] = self.green_signal
+        self.x = np.linspace(-1000, 0,1000)
+        self.plot_1.setData(self.x, self.data1)
+        self.plot_2.setData(self.x, self.data2)
         
         
 
