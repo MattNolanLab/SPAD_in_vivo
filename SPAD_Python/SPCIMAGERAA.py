@@ -291,7 +291,7 @@ class SPCIMAGER():
             print('signals ', data_new.sum())
             #print('signals ', tempdata)
             
-            #kazma = int.from_bytes(data,"big")
+            #kazma = int.from
             
             last_points.append(data_new)
             #last_points = last_points[-10000:]
