@@ -4,17 +4,17 @@ Apply SPAD sensor and photometry system to imaging GEVI in vivo
 ## PCB_design_files
 This is the PCB design files of the SPCimager, these files will support PCB printing and assembling for a new board.
 
-## SPADmicroscopeAdapter3Dmodel
+## SPAD_microscope_Adapter_3Dmodel
 This is the 3D model for cover that is compatible with a c-mount adaptor, so that the board could be mounted on a microscope.
 
 ## SPCIMAGER_AA_USB3
 -This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data.
 
--Running /GUI/DigitalDemo_fast.m will start the GUI, which will provide a live mode imaging and cab save the imaging data as a .bin file.
+-Running "SPCIMAGER_AA_USB3//GUI/DigitalDemo_fast.m" will start the GUI, which will provide a live mode imaging and cab save the imaging data as a .bin file.
 
 -I already added a few lines to save a .csv format timestamp (Yifang).
 
--"fixed_aggtwo_mask.m" is the code to analyse the .bin file, and generate total photon counts for each frame.
+-"fixed_aggtwo_mask.m" is the code to analyse the .bin file, it can output an aggregated image of the recorded file (also support background removal if you record a background). It can calculate total photon counts within the ROI (by changing the parameter of "xxrang" and "yyrange") for each frame and concatinate over time to generate the trace values. ----These analysis functions are also supported by python in the "SPAD_python" folder.
 
 ## SPAD_ex_vivo_analysis
 Analysis codes for our ex vivo imaging data of Voltron with SPAD.
