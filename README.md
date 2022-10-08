@@ -2,19 +2,21 @@
 Apply SPAD sensor and photometry system to imaging GEVI in vivo
 
 ## PCB_design_files
-This is the PCB design files of the SPCimager, these files will support PCB printing and assembling for a new board.
+This is the PCB design files of the SPCimager, these files will support PCB printing and assembling for a new PCB board.
+
+To build the SPC imager, a Opal Kelly XEM6310 FPGA board and a SPAD sensor chip will be plugged on this PCB.
 
 ## SPAD_microscope_Adapter_3Dmodel
-This is the 3D model for cover that is compatible with a c-mount adaptor, so that the board could be mounted on a microscope.
+This is the 3D model for cover that is compatible with a c-mount adaptor, so that the board could be mounted on a microscope. the ".stl" can be directly used for 3D printing.
 
 ## SPCIMAGER_AA_USB3
--This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data.
+-This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data. Please find the user guide document in this folder for details.
 
 -Running "SPCIMAGER_AA_USB3//GUI/DigitalDemo_fast.m" will start the GUI, which will provide a live mode imaging and cab save the imaging data as a .bin file.
 
 -I already added a few lines to save a .csv format timestamp (Yifang).
 
--"fixed_aggtwo_mask.m" is the code to analyse the .bin file, it can output an aggregated image of the recorded file (also support background removal if you record a background). It can calculate total photon counts within the ROI (by changing the parameter of "xxrang" and "yyrange") for each frame and concatinate over time to generate the trace values. ----These analysis functions are also supported by python in the "SPAD_python" folder.
+-"fixed_aggtwo_mask.m" is the code to analyse the .bin file. The first part of the codes can output an aggregated image of the recorded file, it also support background removal if you record a background. The second part of the codes can calculate total photon counts within the ROI (by changing the parameter of "xxrang" and "yyrange") for each frame and concatinate over time to generate the trace values. ----These analysis functions are also supported by python in the "SPAD_python" folder.
 
 ## SPAD_ex_vivo_analysis
 Analysis codes for our ex vivo imaging data of Voltron with SPAD.
