@@ -1,5 +1,11 @@
 # SPAD_in_vivo
-Apply SPAD sensor and photometry system to imaging GEVI in vivo
+Apply SPAD sensor and photometry system to imaging GEVI in vivo.
+
+Details of the SPAD camera we're using can be found here:
+https://ieeexplore.ieee.org/document/7247713
+
+Publication of using the SPAD camera to image Genetically Encoded Voltage Indicater (GEVI) in acute mouse brain slices:
+https://doi.org/10.1002/advs.202203018
 
 ## PCB_design_files
 This is the PCB design files of the SPCimager, these files will support PCB printing and assembling for a new PCB board.
@@ -10,7 +16,7 @@ To build the SPC imager, a Opal Kelly XEM6310 FPGA board and a SPAD sensor chip 
 This is the 3D model for cover that is compatible with a c-mount adaptor, so that the board could be mounted on a microscope. the ".stl" can be directly used for 3D printing.
 
 ## SPCIMAGER_AA_USB3
--This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data. Please find the "SPCIMAGER_AA_USB3_UserGuide.md" document in this folder for details.
+-This is the original software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data. Please find the "SPCIMAGER_AA_USB3_UserGuide.md" document in this folder for details.
 
 https://github.com/MattNolanLab/SPAD_in_vivo/blob/main/SPCIMAGER_AA_USB3_UserGuide.md
 
@@ -25,7 +31,7 @@ Analysis codes for our ex vivo imaging data of Voltron with SPAD.
 
 Full details can be found in our publication: https://doi.org/10.1002/advs.202203018
 
-Data share: https://datashare.ed.ac.uk/handle/10283/4486
+Full data and code share: https://datashare.ed.ac.uk/handle/10283/4486
 
 ## SPAD_simulation 
 A simple jupyter notebook to simulate the sensor for fiber photometry with different sets of LED stimulations. 
