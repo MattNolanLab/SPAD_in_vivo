@@ -10,9 +10,9 @@ To build the SPC imager, a Opal Kelly XEM6310 FPGA board and a SPAD sensor chip 
 This is the 3D model for cover that is compatible with a c-mount adaptor, so that the board could be mounted on a microscope. the ".stl" can be directly used for 3D printing.
 
 ## SPCIMAGER_AA_USB3
--This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data. Please find the user guide document in this folder for details.
+-This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data. Please find the "SPCIMAGER_AA_USB3_UserGuide.md" document in this folder for details.
 
--Running "SPCIMAGER_AA_USB3//GUI/DigitalDemo_fast.m" will start the GUI, which will provide a live mode imaging and cab save the imaging data as a .bin file.
+-Running "SPCIMAGER_AA_USB3/GUI/DigitalDemo_fast.m" will start the GUI, which will provide a live mode imaging and cab save the imaging data as a .bin file.
 
 -I already added a few lines to save a .csv format timestamp (Yifang).
 
