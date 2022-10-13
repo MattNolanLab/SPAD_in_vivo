@@ -7,3 +7,5 @@ The first time you run the GUI. MATLAB may give some errors and ask you to insta
 
 # Introduction
 This is the PCB design files of the SPCimager, these files will support PCB printing and assembling for a new PCB board.
+
+# Run the GUI and record data with contnuous mode
