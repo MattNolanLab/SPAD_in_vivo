@@ -12,6 +12,8 @@ This is the 3D model for cover that is compatible with a c-mount adaptor, so tha
 ## SPCIMAGER_AA_USB3
 -This is the software to run a MATLAB based GUI to control the Opal Kelly FPGA for SPAD imaging and saving data. Please find the "SPCIMAGER_AA_USB3_UserGuide.md" document in this folder for details.
 
+https://github.com/MattNolanLab/SPAD_in_vivo/blob/main/SPCIMAGER_AA_USB3_UserGuide.md
+
 -Running "SPCIMAGER_AA_USB3/GUI/DigitalDemo_fast.m" will start the GUI, which will provide a live mode imaging and cab save the imaging data as a .bin file.
 
 -I already added a few lines to save a .csv format timestamp (Yifang).
