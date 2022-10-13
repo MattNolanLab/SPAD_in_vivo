@@ -1,12 +1,12 @@
 # SPCMAGER_AA_USB3 User Guide
 The SPAD imager works with a customised PCB, a FPGA board (Opal Kelly XEM6310) and a SPAD sensor chip. The fully assembled board would be like this:
-![49b3e5e62959b18756e2a7483b2c42a](https://user-images.githubusercontent.com/77569999/195673385-6f2c365a-814c-4d81-8b1c-3871f04e8969.jpg)
+![image](https://user-images.githubusercontent.com/77569999/195673623-381bc49c-a8e5-44e4-af3c-d6e432e4647f.png)
 
 Opal Kelly XEM6310 is at the end of life, so you cannot buy this board, but XEM7310 would also be compatible. We're also developing new PCB for more functions.
 
 https://docs.opalkelly.com/xem6310/
 
-Before running the GUI, you may need to download and install the FrontPanel USB driver, it’s also in the GitHub folder.
+Before running the software, you may need to download and install the FrontPanel USB driver, it’s also in the GitHub folder.
 
 https://pins.opalkelly.com/downloads
 
