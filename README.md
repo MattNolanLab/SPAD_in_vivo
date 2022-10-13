@@ -5,12 +5,21 @@ Details of the SPAD camera we're using can be found here:
 https://ieeexplore.ieee.org/document/7247713
 
 Publication of using the SPAD camera to image Genetically Encoded Voltage Indicater (GEVI) in acute mouse brain slices:
+
 https://doi.org/10.1002/advs.202203018
 
 ## PCB_design_files
 This is the PCB design files of the SPCimager, these files will support PCB printing and assembling for a new PCB board.
 
 To build the SPC imager, a Opal Kelly XEM6310 FPGA board and a SPAD sensor chip will be plugged on this PCB.
+
+Opal Kelly XEM6310 is at the end of life, so you cannot buy this board, but XEM7310 would also be compatible. We're also developing new PCB for more functions.
+
+https://docs.opalkelly.com/xem6310/
+
+Before running the software, you may need to download and install the FrontPanel USB driver, it’s also in the GitHub folder.
+
+https://pins.opalkelly.com/downloads
 
 ## SPAD_microscope_Adapter_3Dmodel
 This is the 3D model for cover that is compatible with a c-mount adaptor, so that the board could be mounted on a microscope. the ".stl" can be directly used for 3D printing.
