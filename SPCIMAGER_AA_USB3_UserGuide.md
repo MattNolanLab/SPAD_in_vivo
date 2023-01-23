@@ -37,3 +37,8 @@ Run the file "SPICIMAGERAA/GUI/DigitalDemo_fast.m", a GUI will show:
 
 5. The "Brightness" box on the right can be changed to get a brighter live image. 
 
+# Trouble shooting
+1. The live-mode images may have grids like this:
+![image](https://user-images.githubusercontent.com/77569999/214115271-d432c324-39ad-4d0d-96fa-b41c5a664831.png)
+This is because the three potentiometers on the board (in the red circle) are not adjusted correctly. This can be easily fixed by adjusting the screw while live-mode imaging to find a sweet spot without any grids. 
+![image](https://user-images.githubusercontent.com/77569999/214116149-dd98fd39-70cd-4796-996f-14fdb9206508.png)
