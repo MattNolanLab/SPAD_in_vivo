@@ -17,7 +17,11 @@ This is a MATLAB based GUI that will support using the SPAD imager. Running the 
 
 (1) The "SPCIMAGER_TOP.bit" can record the data when you click "Capture & Save data > start" on the GUI. This is the most common used mode. 
 
-(2) The "SPCIMAGER_TOP_trigger.bit" will allow a triggered mode recording, meaning that when you click the "Capture & Save data > start" button, the recording won't start until a 3V voltage is delivered to a pin on the PCB. This mode is usually used for synchronising the optical recording with other recordings, e.g. ephys, behavior camera. The pin to deliver the trigger signal is OPTCLK_FPGA2 in the PCB design file, or JP92 middle pin on the PCB (for old version PCB used in Tian et al 2022, it's JP86 middle pin), a Ground pin (JP43 AGND) should also be connected to ground in triggered mode.
+(2) The "SPCIMAGER_TOP_trigger2.bit" will allow a triggered mode recording, meaning that when you click the "Capture & Save data > start" button, the recording won't start until a 3.3V voltage is delivered to a pin on the PCB. This mode is usually used for synchronising the optical recording with other recordings, e.g. ephys, behavior camera. The pin to deliver the trigger signal is OPTCLK_FPGA2 in the PCB design file, or JP92 middle pin on the PCB (for old version PCB used in Tian et al 2022, it's JP86 middle pin), a Ground pin (JP43 AGND) should also be connected to ground in triggered mode.
+
+# WARNING: 
+DO NOT use voltages that larger than 5V to tigger the JP92 middle pin, that will 100% damage the FPGA.
+Please also ground the board properly and decharge yourself before touching the board. Static electricity might also damage the board.
 
 # Run the GUI and record data with contnuous mode.
 
