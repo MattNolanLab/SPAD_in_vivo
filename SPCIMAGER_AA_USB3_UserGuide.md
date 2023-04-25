@@ -46,3 +46,11 @@ Run the file "SPICIMAGERAA/GUI/DigitalDemo_fast.m", a GUI will show:
 ![image](https://user-images.githubusercontent.com/77569999/214115271-d432c324-39ad-4d0d-96fa-b41c5a664831.png)
 This is because the three potentiometers on the board (in the red circle) are not adjusted correctly. This can be easily fixed by adjusting the screw while live-mode imaging to find a sweet spot without any grids. 
 ![image](https://user-images.githubusercontent.com/77569999/214116149-dd98fd39-70cd-4796-996f-14fdb9206508.png)
+
+
+2. If you see bright strips on the live-mode images like the following picture, it might be that you're not using a USB3.0.
+![image](https://user-images.githubusercontent.com/77569999/234239031-a0e9d29f-b557-4ed4-807a-a90f31c50a6b.png)
+You can check the color tone for the USB port:
+![image](https://user-images.githubusercontent.com/77569999/234239412-bac6a286-d01a-415c-a930-1eb9799a0c70.png)
+
+
