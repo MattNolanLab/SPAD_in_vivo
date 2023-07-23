@@ -1,248 +1,347 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec 17 11:12:47 2021
+Created on Fri Feb 25 17:36:16 2022
 
 @author: Yifang
 """
 import os
-import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.decomposition import FastICA
-from scipy import signal
-import SPADdemod
-import SPADreadBin
+import matplotlib.pyplot as plt
+from scipy.fft import irfft, rfft, rfftfreq
+from scipy.signal import hilbert
+import scipy
+from scipy import interpolate
+from scipy.signal import find_peaks
 
-'''Set basic parameter'''
-def Set_filename (dpath, csv_filename="traceValue.csv"):
-    #dpath=set_dpath()
-    filename = os.path.join(dpath, csv_filename) #csv file is the file contain values for each frame
-    return filename
+def findMask(trace,high_thd,low_thd=0):
+    mask=trace.copy()
+    mask[mask>high_thd]=0
+    mask[mask<low_thd]=0
+    mask[mask!=0]=1
+    return mask
+
+def preserve_more_than_five_ones(mask_array):
+    preserved_array = mask_array.copy()
+    consecutive_ones = 0
+
+    for i in range(len(mask_array)):
+        if mask_array[i] == 1:
+            consecutive_ones += 1
+        else:
+            if consecutive_ones < 5:
+                preserved_array[i - consecutive_ones:i] = 0
+            consecutive_ones = 0
+
+    # Handle the last sequence if it ends with 1s
+    if consecutive_ones > 3:
+        preserved_array[len(mask_array) - consecutive_ones:] = 1
+
+    return preserved_array
+
+def preserve_fewer_than_four_ones(mask_array):
+    preserved_array = mask_array.copy()
+    consecutive_ones = 0
+
+    for i in range(len(mask_array)):
+        if mask_array[i] == 1:
+            consecutive_ones += 1
+        else:
+            if consecutive_ones > 0 and consecutive_ones <= 4:
+                preserved_array[i - consecutive_ones:i] = 1
+            else:
+                preserved_array[i - consecutive_ones:i] = 0
+            consecutive_ones = 0
+
+    # Handle the last sequence if it ends with 1s
+    if consecutive_ones > 0 and consecutive_ones < 3:
+        preserved_array[len(mask_array) - consecutive_ones:] = 1
+    else:
+        preserved_array[len(mask_array) - consecutive_ones:] = 0
+
+    return preserved_array
+
+
+def findTraceFromMask(trace,mask):
+    non_signal_index=np.where(mask==0)[0]
+    trace_temp=trace.copy()
+    trace_temp[non_signal_index]=0
+    peaks, _ = find_peaks(trace_temp)
+    envelope = np.zeros_like(trace_temp)
+    envelope[peaks] = trace[peaks]
+    return peaks,envelope
+
+
+def ShowRFFT(count_value,fs=9938.4):
+    sample_number=len(count_value)
+    print ('sample_number is', sample_number)
     
-def Read_trace (filename,mode="SPAD",dtype="numpy"):
-    '''mode can be SPAD or photometry'''
-    '''dtype can be numpy or pandas---in the future'''
-    if mode =="SPAD":
-        trace = np.genfromtxt(filename, delimiter=',')
-        return trace
-    elif mode =="photometry":
-        Two_traces=pd.read_csv(filename)
-        Green=Two_traces['Analog1']
-        Red=Two_traces['Analog2']
-        return Green,Red
+    yf = rfft(count_value)
+    xf = rfftfreq(sample_number, 1 / fs)
+    #plt.plot(xf, yf)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(xf, np.abs(yf))
+    return fig, ax
 
-def get_bin_trace (trace,bin_window=10):
-    '''Basic filter and smooth'''
-    trace = trace.astype(np.float64)
-    '''reverse the trace (voltron and ASAP3 is reversed)''' 
-    # trace_reverse=np.negative(trace_raw)
-    # plot_trace(trace_reverse, name='raw_trace_reverse')     
-    trace_binned=np.array(trace).reshape(-1, bin_window).mean(axis=1)
-    fig, ax = plt.subplots(figsize=(10,2))
-    ax=plot_trace(trace_binned,ax, fs=9938.4/bin_window,title="Trace_binned to_"+str(int(10000/bin_window))+"Hz")
-    ax.set_xlabel('Time(second)')
-    ax.set_ylabel('Photon Count')
+def hl_envelopes_max(s, dmin=1, dmax=1, split=True):
+    """
+    Input :
+    s: 1d-array, data signal from which to extract high and low envelopes
+    dmin, dmax: int, optional, size of chunks, use this if the size of the input signal is too big
+    split: bool, optional, if True, split the signal in half along its mean, might help to generate the envelope in some cases
+    Output :
+    lmin,lmax : high/low envelope idx of input signal s
+    """
+    # locals max
+    lmax = (np.diff(np.sign(np.diff(s))) < 0).nonzero()[0] + 1 
+    lmin = (np.diff(np.sign(np.diff(s))) > 0).nonzero()[0] + 1 
     
-    return trace_binned
+    if split:
+        # s_mid is zero if s centered around x-axis or more generally mean of signal     
+        # pre-sorting of locals min based on relative position with respect to s_mid 
+        #lmin = lmin[s[lmin]<800]
+        #lmin = lmin[s[lmin]>100]
+        lmin = lmax[s[lmax]<1000]
+        lmin = lmin[s[lmin]>200]
+        # pre-sorting of localbased on relative position with respect to s_mid 
+        lmax = lmax[s[lmax]>2700]
+        lmax = lmax[s[lmax]<4000]
 
-def get_detrend (trace):
-    trace_detrend= signal.detrend(trace) 
-    fig, ax = plt.subplots(figsize=(15, 3))
-    ax=plot_trace(trace_detrend,ax, title="Trace_detrend")
-    return trace_detrend
+    # global max of dmax-chunks of locals max 
+    lmin = lmin[[i+np.argmin(s[lmin[i:i+dmin]]) for i in range(0,len(lmin),dmin)]]
+    # global min of dmin-chunks of locals min 
+    lmax = lmax[[i+np.argmax(s[lmax[i:i+dmax]]) for i in range(0,len(lmax),dmax)]]
+    
+    return lmin,lmax
 
-def butter_filter(data, btype='low', cutoff=10, fs=9938.4, order=5):
-#def butter_filter(data, btype='high', cutoff=3, fs=130, order=5): # for photometry data  
+def Find_targetPeaks(s, dmin=1, dmax=1, high_limit=4000, low_limit=2700):
+    # locals max
+    lmax = (np.diff(np.sign(np.diff(s))) < 0).nonzero()[0] + 1 
+    
+    lmax = lmax[s[lmax]>low_limit]
+    lmax = lmax[s[lmax]<high_limit]
+    
+    lmin = lmax[s[lmax]<500]
+    lmin = lmin[s[lmin]>100]
+ 
+    lmax = lmax[[i+np.argmax(s[lmax[i:i+dmax]]) for i in range(0,len(lmax),dmax)]]
+    lmin = lmin[[i+np.argmin(s[lmin[i:i+dmin]]) for i in range(0,len(lmin),dmin)]]
+    return lmin, lmax
+
+def Interpolate_timeDiv (Index,trace):
+    x=Index
+    y=trace[Index]
+    if Index[0]!=0:
+        x = np.concatenate( ([0], x ))
+        y = np.concatenate( ([y[0]], y ) )
+    if Index[-1]!=len(trace)-1:
+        x = np.concatenate( (x,[len(trace)-1]) )
+        y = np.concatenate( (y ,[y[-1]]) )
+    f = interpolate.interp1d(x, y)
+    xnew = np.arange(0, len(trace), 1)
+    ynew = f(xnew)   # use interpolation function returned by `interp1d`
+    return xnew, ynew
+
+def plotDemodFreq (mixedTrace,envelope,xf,yfMixed,yfEnvelope,color):
+    '''
+    Plot 
+    1.Separated single channel mixed signal.
+    2.Single channel spectrum.
+    3.Zoomed window of modulated signal and envelope
+    4.Spectrum of recovered signal
+    '''
+    sample_points=np.arange(len(mixedTrace)) #timeline in sample points    
+    
+    fig, ((ax0, ax2), (ax1,ax3)) = plt.subplots(2,2)
+    ax0.plot(sample_points, mixedTrace, label='Modulated',linewidth=1)
+    ax0.plot(sample_points, envelope, color=color,label='Envelope',linewidth=1)
+    ax0.legend(loc='best')
+    
+    ax1.plot(sample_points, mixedTrace, label='Modulated',linewidth=1)
+    ax1.plot(sample_points, envelope,color=color,label='Envelope',linewidth=1)
+    ax1.set_xlim(2000,2200)
+    ax1.set_xlabel("Time in frames")
+    ax1.legend(loc='best')
+    
+    ax2.plot(xf, np.abs(yfMixed), label='Modulated spectrum',linewidth=1)
+    ax2.legend(loc='best')
+    
+    ax3.plot(xf, np.abs(yfEnvelope), label='Envelope spectrum',color=color,linewidth=1)
+    ax3.set_xlabel("Frequency")
+    ax3.legend(loc='best')
+    ax3.set_xlim(-10,100)    
+    fig.tight_layout()
+    return fig
+
+def plotTwoChannel (mixed_red,envelope_red,mixed_green,envelope_green,zoomWindw=[2000,2200]):
+    '''
+    Plot Two Color
+    '''
+    sample_points=np.arange(len(mixed_red)) #timeline in sample points    
+    
+    fig, (ax0,ax1,ax2,ax3) = plt.subplots(nrows=4)
+    ax0.plot(sample_points, envelope_red, color='r',label='Envelope',linewidth=1)
+    #ax0.legend(loc='best')
+    
+    ax1.plot(sample_points, envelope_red,color='r',label='Zoomed Envelope',linewidth=1)
+    ax1.set_xlim(zoomWindw)
+    ax1.legend(loc='upper right')
+    
+    ax2.plot(sample_points, envelope_green,color='g',label='Envelope',linewidth=1)    
+    
+    ax3.plot(sample_points, envelope_green,color='g',label='Zoomed Envelope',linewidth=1)
+    ax3.legend(loc='upper right')
+    ax3.set_xlim(zoomWindw)   
+    ax3.set_xlabel("Time in frames")
+    
+    fig.tight_layout()
+    return fig
+
+
+def butter_filter(data, btype='low', cutoff=10, fs=9938.4, order=10):   
     # cutoff and fs in Hz
     nyq = 0.5 * fs
     normal_cutoff = cutoff / nyq
-    b, a = signal.butter(order, normal_cutoff, btype=btype, analog=False)
-    y = signal.filtfilt(b, a, data, axis=0)
-    fig, ax = plt.subplots(figsize=(15, 3))
-    ax=plot_trace(y,ax, title="trace_10Hz_low_pass")
+    b, a = scipy.signal.butter(order, normal_cutoff, btype=btype, analog=False)
+    y = scipy.signal.filtfilt(b, a, data, axis=0)
     return y
 
-'''Use python Scipy to plot PSD'''
-def PSD_plot (data,fs=9938.4,method="welch",color='tab:blue',linewidth=1,):
-    '''Three methods to plot PSD: welch,periodogram,plotlib'''
-    fig=plt.figure()
-    if method == "welch":
-        f, Pxx_den = signal.welch(data, fs=fs, nperseg=4096)       
-        plt.semilogy(f, Pxx_den,linewidth=linewidth)
-        #plt.ylim([0.5e-3, 1])
-        plt.xlabel('frequency [Hz]')
-        plt.ylabel('PSD [V**2/Hz]')
-    elif method == "periodogram":
-        f, Pxx_den = signal.periodogram(data, fs=fs)
-        plt.semilogy(f, Pxx_den,linewidth=linewidth)
-    elif method == "plotlib":
-        plt.psd(data,Fs=fs,linewidth=linewidth)
-    return fig
+def DemodFreqShift (count_value,fc_g,fc_r,fs=9938.4):
+    sample_number=len(count_value)
+    #sample_points=np.arange(sample_number) #timeline in sample points
+    print ('sample_number is', sample_number)
+    print ('sampling rage is', fs)
+    
+    yf = rfft(count_value)
+    xf = rfftfreq(sample_number, 1 / fs)
+    
+    '''Remove unwanted low/high frequencies and demodulation'''
+    points_per_freq = len(xf) / (fs/2)
+    #yf[0:int(10*points_per_freq)] = 0 
+    #yf[int(3060*points_per_freq):]=0
+    #mix = irfft(yf)
+    
+    yf_g = np.copy(yf)
+    yf_r=np.copy(yf)
+    
+    '''The maximum frequency is half the sample rate'''
+    fc_g_idx = int(points_per_freq * fc_g)
+    sideBand=int(points_per_freq *250) 
+    fc_r_idx = int(points_per_freq * fc_r) 
+    print ('fc_green is',fc_g)
+    print ('fc_red is',fc_r)
+    print ('fc_g_idx is',fc_g_idx)
+    print ('sideBand_idx is',sideBand)
+    print ('fc_r_idx is',fc_r_idx)
+    
+    '''For red---preserve wanted band'''
+    yf_r[0: fc_r_idx - sideBand] = 0 
+    yf_r[fc_r_idx + sideBand : ] = 0 
+    signal_r = irfft(yf_r)    
+    print ('For red channal, keep band:',fc_r_idx - sideBand,'to',fc_r_idx + sideBand)   
+    
+    '''Envelope--red'''
+    lmin,lmax=hl_envelopes_max(signal_r, dmin=1, dmax=1, split=False)
+    xnew, red_recovered=Interpolate_timeDiv (lmax,signal_r)
+        
+    '''For green'''
+    yf_g[0: fc_g_idx - sideBand] = 0 
+    yf_g[fc_g_idx + sideBand : ] = 0 
+    signal_g = irfft(yf_g)
+    print ('For green channal, keep band:',fc_g_idx - sideBand,'to',fc_g_idx + sideBand)   
+    '''Hilbert transform--green'''
+    lmin,lmax=hl_envelopes_max(signal_g, dmin=1, dmax=1, split=False)
+    xnew, green_recovered=Interpolate_timeDiv (lmax,signal_g)          
+    
+    '''PLOT TO COMPARE'''    
+    fig=plotTwoChannel (mixed_red=signal_r,envelope_red=red_recovered,
+                        mixed_green=signal_g,envelope_green=green_recovered,
+                        zoomWindw=[0,10000])
+    
+    return red_recovered,green_recovered
+
+def DemodFreqShift_bandpass (count_value,fc_g,fc_r,fs=9938.4):
+    mix_g=butter_filter(count_value, btype='low', cutoff=fc_g+250, fs=fs, order=5)
+    mix_g=butter_filter(mix_g, btype='high', cutoff=fc_g-250, fs=fs, order=5)
+    xcorr = lambda i: np.correlate(np.roll(mix_g,i), mix_g)
+    lags = np.arange(int(-0.5*fs/fc_g),int(0.5*fs/fc_g))
+    lag = lags[np.argmax([xcorr(s) for s in lags])]
+    # Demodulate signal by multiplication with lagged modulation then lowpass filtering.
+    mixed_green = np.roll(mix_g,lag)*mix_g
+
+    mix_r=butter_filter(count_value, btype='low', cutoff=fc_r+250, fs=fs, order=5)
+    mix_r=butter_filter(mix_r, btype='high', cutoff=fc_r-250, fs=fs, order=5)
+    xcorr = lambda i: np.correlate(np.roll(mix_r,i), mix_r)
+    lags = np.arange(int(-0.5*fs/fc_r),int(0.5*fs/fc_r))
+    lag = lags[np.argmax([xcorr(s) for s in lags])]
+    # Demodulate signal by multiplication with lagged modulation then lowpass filtering.
+    mixed_red = np.roll(mix_r,lag)*mix_r
+
+    green_recovered=butter_filter(mixed_green, btype='low', cutoff=200, fs=fs, order=5)
+    red_recovered=butter_filter(mixed_red, btype='low', cutoff=200, fs=fs, order=5)
+  
+    
+    '''PLOT TO COMPARE'''    
+    fig=plotTwoChannel (mixed_red=mixed_red,envelope_red=red_recovered,
+                        mixed_green=mixed_green,envelope_green=green_recovered,
+                        zoomWindw=[0,10000])
+    return red_recovered,green_recovered
+
+'''Time Division'''
+def hl_envelopes_idx(s, dmin=1, dmax=1, split=False):
+    """
+    Input :
+    s: 1d-array, data signal from which to extract high and low envelopes
+    dmin, dmax: int, optional, size of chunks, use this if the size of the input signal is too big
+    split: bool, optional, if True, split the signal in half along its mean, might help to generate the envelope in some cases
+    Output :
+    lmin,lmax : high/low envelope idx of input signal s
+    """
+
+    # locals min      
+    lmin = (np.diff(np.sign(np.diff(s))) > 0).nonzero()[0] + 1 
+    # locals max
+    lmax = (np.diff(np.sign(np.diff(s))) < 0).nonzero()[0] + 1 
+    
+    if split:
+        # s_mid is zero if s centered around x-axis or more generally mean of signal
+        s_mid = np.mean(s) 
+        # pre-sorting of locals min based on relative position with respect to s_mid 
+        lmin = lmin[s[lmin]<s_mid]#
+        # pre-sorting of local max based on relative position with respect to s_mid 
+        lmax = lmax[s[lmax]>s_mid]
+
+    # global max of dmax-chunks of locals max 
+    lmin = lmin[[i+np.argmin(s[lmin[i:i+dmin]]) for i in range(0,len(lmin),dmin)]]
+    # global min of dmin-chunks of locals min 
+    lmax = lmax[[i+np.argmax(s[lmax[i:i+dmax]]) for i in range(0,len(lmax),dmax)]]
+    
+    return lmin,lmax
 
 
-def readMultipleBinfiles(dpath,fileNum):
-    for i in range(fileNum):
-        Savefilename = "traceValue"+str(i+1)+".csv"
-        Binfilename = os.path.join(dpath, "spc_data"+str(i+1)+".bin")
-        Bindata=SPADreadBin.SPADreadBin(Binfilename,pyGUI=False)
-        #SPADreadBin.countTraceValue(dpath,Bindata,xxrange=[60,180],yyrange=[40,160],filename=Savefilename) 
-        SPADreadBin.countTraceValue(dpath,Bindata,xxrange=[100,200],yyrange=[80,160],filename=Savefilename) 
-        SPADreadBin.ShowImage(Bindata,dpath)
+
+def main():
+    dpath="C:/SPAD/SPADData/20220423/1454214_g1r2_2022_4_23_13_48_56"
+    filename = os.path.join(dpath, "traceValue1.csv")  #csv file is the file contain values for each frame
+    count_value = np.genfromtxt(filename, delimiter=',')
+    '''PLOT the trace'''
+    plt.figure(figsize=(15, 4))
+    plt.plot(count_value,linewidth=1)
+    plt.title("trace")
+    '''PLOT the details of the trace'''
+    plt.figure()
+    plt.plot(count_value,linewidth=1)
+    #plt.xlim(2000,2200)
+    
+    '''Using freq shift modulation'''
+    red_recovered,green_recovered=DemodFreqShift (count_value,fc_g=1000,fc_r=2000,fs=9938.4)
+    '''Using phase shift modulation'''
+    #red_recovered,green_recovered=DemodPhaseShift (count_value,fc=1000,ini_phase=(-0.848* np.pi))
+    
     return -1
 
-def combineTraces (dpath,fileNum):
-    for i in range(fileNum):
-        filename = os.path.join(dpath, "traceValue"+str(i+1)+".csv")  #csv file is the file contain values for each frame
-        print(filename)
-        if i==0:
-            trace_raw = np.genfromtxt(filename, delimiter=',')
-        else:
-            trace_add = np.genfromtxt(filename, delimiter=',')
-            trace_raw=np.hstack((trace_raw,trace_add))
-    filename = os.path.join(dpath, "traceValueAll.csv")
-    np.savetxt(filename, trace_raw, delimiter=",")
-    return trace_raw
-
-def getSignal_subtract_freq(trace,fc_g=1000,fc_r=2000,fs=9938.4):
-    Red,Green= SPADdemod.DemodFreqShift (trace,fc_g=fc_g,fc_r=fc_r,fs=9938.4)
-    #Red,Green= SPADdemod.DemodFreqShift_Bandpass (trace,fc_g=fc_g,fc_r=fc_r,fs=9938.4)
-    from sklearn import preprocessing
-    RedNorm=preprocessing.normalize([Red])
-    GreenNorm=preprocessing.normalize([Green])
-    Signal=GreenNorm-RedNorm
-    return Signal[0]
-
-def getSignal_subtract(Red,Green,fs=9938.4):
-    from sklearn import preprocessing
-    RedNorm=preprocessing.normalize([Red])
-    GreenNorm=preprocessing.normalize([Green])
-    Signal=GreenNorm-RedNorm
-    return Signal[0]
-
-def getICA (Red,Green):
-    channel1=Green
-    channel2=Red
-    X = np.c_[channel1,channel2]
-    # Compute ICA
-    ica = FastICA(n_components=2)
-    S = ica.fit_transform(X)  # Reconstruct signals
-    A = ica.mixing_  # Get estimated mixing matrix
-    '''Plot ICA'''
-    plt.figure()
-    models = [X, S]
-    names = [
-        "Observations (mixed signal)",
-        "ICA recovered signals",
-    ]
-    colors = ["green", "red"]
-    
-    for ii, (model, name) in enumerate(zip(models, names), 1):
-        plt.subplot(2, 1, ii)
-        plt.title(name)
-        for sig, color in zip(model.T, colors):
-            plt.plot(sig, color=color,alpha=0.5)
-    plt.tight_layout()
-    plt.show()
-    '''get two separated signals'''
-    signal1=S[:,0]
-    signal2=S[:,1]
-    
-    return signal1, signal2
-
-'''PSD analysis after subtracting mean'''
-def plot_PSD_bands (trace,fs=9938.4):
-    from numpy.fft import fft
-    t = np.arange(len(trace)) / fs
-    
-    x = trace                               # Relabel the data variable
-    dt = t[1] - t[0]                      # Define the sampling interval
-    N = x.shape[0]                        # Define the total number of data points
-    T = N * dt                            # Define the total duration of the data
-    
-    xf = fft(x - x.mean())                # Compute Fourier transform of x
-    Sxx = 2 * dt ** 2 / T * (xf * xf.conj())  # Compute spectrum
-    Sxx = Sxx[:int(len(x) / 2)]           # Ignore negative frequencies
-    
-    df = 1 / T.max()                      # Determine frequency resolution
-    fNQ = 1 / dt / 2                      # Determine Nyquist frequency
-    faxis = np.arange(0,fNQ,df)              # Construct frequency axis
-
-    fig, ax = plt.subplots(2,2,sharey=True)
-    
-    ax[0,0].plot(faxis, Sxx.real)                 # Plot spectrum vs frequency
-    ax[0,0].set_xlim([0, 250])
-    #ax[0,0].set_ylim([0, 2])                    # Select frequency range
-    ax[0,0].set_title("Wide band",fontsize=8)
-    ax[0,0].xaxis.set_tick_params(labelsize=8)
-    ax[0,0].yaxis.set_tick_params(labelsize=8)
-    
-    ax[0,1].plot(faxis, Sxx.real)                 # Plot spectrum vs frequency
-    ax[0,1].set_xlim([1, 28])
-    #ax[0,1].set_ylim([0, 2])                    # Select frequency range
-    ax[0,1].set_title("Theta band",fontsize=8)
-    ax[0,1].xaxis.set_tick_params(labelsize=8)
-    ax[0,1].yaxis.set_tick_params(labelsize=8)
-    
-    ax[1,0].plot(faxis, Sxx.real)                 # Plot spectrum vs frequency
-    ax[1,0].set_xlim([30, 80])
-    #ax[1,0].set_ylim([0, 2])                    # Select frequency range
-    ax[1,0].set_title("Gamma band",fontsize=8)
-    ax[1,0].xaxis.set_tick_params(labelsize=8)
-    ax[1,0].yaxis.set_tick_params(labelsize=8)
-    
-    ax[1,1].plot(faxis, Sxx.real)                 # Plot spectrum vs frequency
-    ax[1,1].set_xlim([100, 220])
-    #ax[1,1].set_ylim([0, 2])                    # Select frequency range
-    ax[1,1].set_title("Ripple band",fontsize=8)
-    ax[1,1].xaxis.set_tick_params(labelsize=8)
-    ax[1,1].yaxis.set_tick_params(labelsize=8)
-    
-    '''How to add a common label'''
-    fig.add_subplot(111, frameon=False)
-    plt.tick_params(labelcolor='none', which='both', top=False, bottom=False, left=False, right=False)
-    plt.xlabel("Frequency [Hz]",fontsize=8)
-    plt.ylabel("Power [$\mu V^2$/Hz]",fontsize=8)
-    
-    fig.tight_layout()
-    
-    return fig
-
-def plot_PSD_bands_full (trace,fs=9938.4):
-    from numpy.fft import fft
-    t = np.arange(len(trace)) / fs
-    
-    x = trace                               # Relabel the data variable
-    dt = t[1] - t[0]                      # Define the sampling interval
-    N = x.shape[0]                        # Define the total number of data points
-    T = N * dt                            # Define the total duration of the data
-    
-    xf = fft(x - x.mean())                # Compute Fourier transform of x
-    Sxx = 2 * dt ** 2 / T * (xf * xf.conj())  # Compute spectrum
-    Sxx = Sxx[:int(len(x) / 2)]           # Ignore negative frequencies
-    
-    df = 1 / T.max()                      # Determine frequency resolution
-    fNQ = 1 / dt / 2                      # Determine Nyquist frequency
-    faxis = np.arange(0,fNQ,df)              # Construct frequency axis
-
-    fig, ax = plt.subplots(1,1)
-    
-    ax.plot(faxis, Sxx.real)                 # Plot spectrum vs frequency
-    ax.set_xlim([0,5000])
-    #ax.set_ylim([0, 1e-7])                    # Select frequency range
-    ax.set_title("Full band",fontsize=8)
-    ax.xaxis.set_tick_params(labelsize=8)
-    ax.yaxis.set_tick_params(labelsize=8)
-    return fig
-    
-def plot_trace(trace,ax, fs=9938.4, label="trace", color='m'):
-    t=(len(trace)) / fs
-    taxis = np.arange(len(trace)) / fs
-    ax.plot(taxis,trace,linewidth=1,color=color,label=label)
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.set_xlim(0,t)
-    ax.legend(loc="upper right", frameon=False)
-    ax.set_xlabel('Time(second)')
-    ax.set_ylabel('Photon Count')
-    return ax
-
+if __name__ == '__main__':
+    # execute only if run as the entry point into the program
+    main()
+        
+        
