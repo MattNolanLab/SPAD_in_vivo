@@ -11,6 +11,65 @@ from scipy.fft import irfft, rfft, rfftfreq
 from scipy.signal import hilbert
 import scipy
 from scipy import interpolate
+from scipy.signal import find_peaks
+
+def findMask(trace,high_thd,low_thd=0):
+    mask=trace.copy()
+    mask[mask>high_thd]=0
+    mask[mask<low_thd]=0
+    mask[mask!=0]=1
+    return mask
+
+def preserve_more_than_five_ones(mask_array):
+    preserved_array = mask_array.copy()
+    consecutive_ones = 0
+
+    for i in range(len(mask_array)):
+        if mask_array[i] == 1:
+            consecutive_ones += 1
+        else:
+            if consecutive_ones < 5:
+                preserved_array[i - consecutive_ones:i] = 0
+            consecutive_ones = 0
+
+    # Handle the last sequence if it ends with 1s
+    if consecutive_ones > 3:
+        preserved_array[len(mask_array) - consecutive_ones:] = 1
+
+    return preserved_array
+
+def preserve_fewer_than_four_ones(mask_array):
+    preserved_array = mask_array.copy()
+    consecutive_ones = 0
+
+    for i in range(len(mask_array)):
+        if mask_array[i] == 1:
+            consecutive_ones += 1
+        else:
+            if consecutive_ones > 0 and consecutive_ones <= 4:
+                preserved_array[i - consecutive_ones:i] = 1
+            else:
+                preserved_array[i - consecutive_ones:i] = 0
+            consecutive_ones = 0
+
+    # Handle the last sequence if it ends with 1s
+    if consecutive_ones > 0 and consecutive_ones < 3:
+        preserved_array[len(mask_array) - consecutive_ones:] = 1
+    else:
+        preserved_array[len(mask_array) - consecutive_ones:] = 0
+
+    return preserved_array
+
+
+def findTraceFromMask(trace,mask):
+    non_signal_index=np.where(mask==0)[0]
+    trace_temp=trace.copy()
+    trace_temp[non_signal_index]=0
+    peaks, _ = find_peaks(trace_temp)
+    envelope = np.zeros_like(trace_temp)
+    envelope[peaks] = trace[peaks]
+    return peaks,envelope
+
 
 def ShowRFFT(count_value,fs=9938.4):
     sample_number=len(count_value)
@@ -35,16 +94,18 @@ def hl_envelopes_max(s, dmin=1, dmax=1, split=True):
     """
     # locals max
     lmax = (np.diff(np.sign(np.diff(s))) < 0).nonzero()[0] + 1 
-    #lmin = (np.diff(np.sign(np.diff(s))) > 0).nonzero()[0] + 1 
+    lmin = (np.diff(np.sign(np.diff(s))) > 0).nonzero()[0] + 1 
     
     if split:
-        # s_mid is zero if s centered around x-axis or more generally mean of signal
-        s_mid = np.mean(s) 
+        # s_mid is zero if s centered around x-axis or more generally mean of signal     
         # pre-sorting of locals min based on relative position with respect to s_mid 
-        lmin = lmax[s[lmax]<1300]
-        #lmin=lmin[s[lmin]>1100]
-        # pre-sorting of local max based on relative position with respect to s_mid 
-        lmax = lmax[s[lmax]>1400]
+        #lmin = lmin[s[lmin]<800]
+        #lmin = lmin[s[lmin]>100]
+        lmin = lmax[s[lmax]<1000]
+        lmin = lmin[s[lmin]>200]
+        # pre-sorting of localbased on relative position with respect to s_mid 
+        lmax = lmax[s[lmax]>2700]
+        lmax = lmax[s[lmax]<4000]
 
     # global max of dmax-chunks of locals max 
     lmin = lmin[[i+np.argmin(s[lmin[i:i+dmin]]) for i in range(0,len(lmin),dmin)]]
@@ -52,6 +113,20 @@ def hl_envelopes_max(s, dmin=1, dmax=1, split=True):
     lmax = lmax[[i+np.argmax(s[lmax[i:i+dmax]]) for i in range(0,len(lmax),dmax)]]
     
     return lmin,lmax
+
+def Find_targetPeaks(s, dmin=1, dmax=1, high_limit=4000, low_limit=2700):
+    # locals max
+    lmax = (np.diff(np.sign(np.diff(s))) < 0).nonzero()[0] + 1 
+    
+    lmax = lmax[s[lmax]>low_limit]
+    lmax = lmax[s[lmax]<high_limit]
+    
+    lmin = lmax[s[lmax]<500]
+    lmin = lmin[s[lmin]>100]
+ 
+    lmax = lmax[[i+np.argmax(s[lmax[i:i+dmax]]) for i in range(0,len(lmax),dmax)]]
+    lmin = lmin[[i+np.argmin(s[lmin[i:i+dmin]]) for i in range(0,len(lmin),dmin)]]
+    return lmin, lmax
 
 def Interpolate_timeDiv (Index,trace):
     x=Index
@@ -242,6 +317,8 @@ def hl_envelopes_idx(s, dmin=1, dmax=1, split=False):
     lmax = lmax[[i+np.argmax(s[lmax[i:i+dmax]]) for i in range(0,len(lmax),dmax)]]
     
     return lmin,lmax
+
+
 
 def main():
     dpath="C:/SPAD/SPADData/20220423/1454214_g1r2_2022_4_23_13_48_56"
